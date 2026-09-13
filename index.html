@@ -436,7 +436,8 @@
     }
 
     function filterAnime() {
-        const searchText = document.getElementById('search-input').value.toLowerCase();
+        const searchInput = document.getElementById('search-input');
+        const searchText = searchInput ? searchInput.value.toLowerCase() : '';
         const gridDiv = document.getElementById('anime-grid');
         
         const filtered = allAnimeData.filter(anime => {
@@ -501,9 +502,9 @@
             options += `<option value="${anime.id}">${anime.title}</option>`;
         });
         
-        epSelect.innerHTML = options;
-        editSelect.innerHTML = options;
-        suggestSelect.innerHTML = options;
+        if(epSelect) epSelect.innerHTML = options;
+        if(editSelect) editSelect.innerHTML = options;
+        if(suggestSelect) suggestSelect.innerHTML = options;
     }
 
     async function addAnimeShow() {
