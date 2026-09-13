@@ -4,42 +4,82 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>S4murai Player</title>
-    <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
-            --bg-color: #0b0b0e;
-            --panel-bg: #141419;
-            --accent: #ff0033;
-            --accent-hover: #ff2a55;
-            --text-main: #f0f0f5;
-            --text-muted: #8b8b9e;
-            --border: #22222d;
+            --bg-color: #0b0f19;
+            --panel-bg: #111827;
+            --card-bg: #1f2937;
+            --accent-red: #ef4444;
+            --accent-red-hover: #dc2626;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: #374151;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
+            min-height: 100vh;
         }
 
         header {
-            background: var(--panel-bg);
-            border-bottom: 1px solid var(--border);
-            padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 20px 40px;
+            background: rgba(17, 24, 39, 0.85);
+            border-bottom: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .logo {
             font-size: 24px;
-            font-weight: bold;
-            color: var(--accent);
+            font-weight: 900;
+            font-style: italic;
+            color: var(--accent-red);
             letter-spacing: 1px;
             cursor: pointer;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--accent-red), #b91c1c);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.35);
+        }
+
+        .btn-secondary {
+            background: var(--card-bg);
+            box-shadow: none;
+        }
+        .btn-secondary:hover {
+            background: #374151;
         }
 
         .container {
@@ -48,86 +88,108 @@
             padding: 0 20px;
         }
 
-        .hidden { display: none !important; }
-        .visible { display: block !important; }
-
-        /* Style Katalogu */
-        .catalog-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        /* Baner ogłoszenia */
+        .announcement-banner {
+            background: linear-gradient(90deg, var(--card-bg), var(--panel-bg));
+            border-left: 4px solid var(--accent-red);
+            padding: 15px 25px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
             gap: 20px;
-            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .announcement-banner img {
+            max-height: 70px;
+            max-width: 120px;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+        .announcement-content strong {
+            color: var(--accent-red);
+            display: block;
+            margin-bottom: 4px;
         }
 
-        .anime-card {
+        /* Sekcja główna / Katalog */
+        .section-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: var(--text-main);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .serials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .serial-card {
             background: var(--panel-bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
             overflow: hidden;
             cursor: pointer;
             transition: transform 0.2s, border-color 0.2s;
-            position: relative;
         }
 
-        .anime-card:hover {
+        .serial-card:hover {
             transform: translateY(-5px);
-            border-color: var(--accent);
+            border-color: var(--accent-red);
         }
 
-        .anime-card img {
+        .serial-card img {
             width: 100%;
             height: 280px;
             object-fit: cover;
+            background: #000;
         }
 
-        .anime-info {
-            padding: 12px;
+        .serial-info {
+            padding: 15px;
         }
 
-        .anime-title {
-            font-weight: bold;
+        .serial-info h4 {
             font-size: 16px;
+            margin-bottom: 5px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        .anime-cat {
+        .serial-info span {
             font-size: 12px;
             color: var(--text-muted);
-            margin-top: 4px;
         }
 
-        .anime-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(0,0,0,0.7);
-            color: #ffd700;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: bold;
+        /* Widok Odtwarzacza */
+        #player-view {
+            display: none;
         }
 
-        /* Style Odtwarzacza */
         .player-container {
             background: var(--panel-bg);
-            border: 1px solid var(--border);
+            border: 1px solid var(--border-color);
             border-radius: 12px;
-            padding: 25px;
+            padding: 20px;
+            margin-bottom: 30px;
         }
 
         .video-wrapper {
             position: relative;
-            padding-bottom: 56.25%; /* 16:9 */
+            padding-bottom: 56.25%;
             height: 0;
             background: #000;
             border-radius: 8px;
             overflow: hidden;
+            margin-bottom: 20px;
         }
 
-        .video-wrapper iframe {
+        .video-wrapper iframe, .video-wrapper video {
             position: absolute;
             top: 0;
             left: 0;
@@ -136,844 +198,435 @@
             border: none;
         }
 
-        .episodes-bar {
+        .episodes-list {
             display: flex;
             gap: 10px;
-            overflow-x: auto;
-            padding: 15px 0;
-            margin-top: 15px;
+            flex-wrap: wrap;
         }
 
-        .ep-select-btn {
-            background: var(--bg-color);
-            border: 1px solid var(--border);
-            color: var(--text-main);
+        .ep-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: white;
             padding: 8px 16px;
             border-radius: 6px;
             cursor: pointer;
-            white-space: nowrap;
             transition: 0.2s;
         }
 
-        .ep-select-btn.active, .ep-select-btn:hover {
-            background: var(--accent);
-            border-color: var(--accent);
+        .ep-btn:hover, .ep-btn.active {
+            background: var(--accent-red);
+            border-color: var(--accent-red);
         }
 
-        /* Sekcja Ogłoszeń na Stronie Głównej */
-        .announcements-section {
-            margin-bottom: 30px;
-        }
-        .announcement-card {
+        /* Nowoczesny Panel Admina */
+        .admin-view {
+            display: none;
             background: var(--panel-bg);
-            border: 1px solid var(--border);
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-        .announcement-card img {
-            max-width: 100%;
-            max-height: 300px;
-            object-fit: cover;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            display: block;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin-top: 20px;
         }
 
-        /* Formularze i Panel Admina */
-        .admin-panel {
-            background: var(--panel-bg);
-            border: 1px solid var(--border);
+        .admin-view h2 {
+            color: var(--accent-red);
+            margin-bottom: 25px;
+            font-size: 22px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .form-section {
+            background: var(--card-bg);
             padding: 20px;
-            border-radius: 8px;
-            margin-top: 30px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .form-section h3 {
+            font-size: 15px;
+            margin-bottom: 15px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        label {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
         }
 
         input, select, textarea {
-            background: var(--bg-color);
-            border: 1px solid var(--border);
-            color: var(--text-main);
-            padding: 10px;
-            border-radius: 6px;
-            width: 100%;
-            box-sizing: border-box;
-            margin-top: 5px;
-            margin-bottom: 15px;
-        }
-
-        button.action-btn {
-            background: var(--accent);
+            background: #0f172a;
+            border: 1px solid var(--border-color);
             color: white;
-            border: none;
-            padding: 10px 20px;
+            padding: 10px 14px;
             border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.2s;
-        }
-
-        button.action-btn:hover {
-            background: var(--accent-hover);
-        }
-
-        .comment-item {
-            background: var(--bg-color);
-            border: 1px solid var(--border);
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 10px;
-        }
-
-        .comment-author {
-            font-weight: bold;
-            color: var(--accent);
-            font-size: 13px;
-        }
-
-        .comment-text {
-            margin-top: 5px;
             font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
         }
 
-        .admin-ep-item {
-            background: var(--bg-color);
-            border: 1px solid var(--border);
-            padding: 8px 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 5px;
-            border-radius: 4px;
+        input:focus, select:focus {
+            border-color: var(--accent-red);
         }
 
-        .small-del-btn {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 4px 8px;
-            border-radius: 4px;
-            cursor: pointer;
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo" onclick="closePlayer()">S4MURAI PLAYER</div>
-        <div>
-            <button class="action-btn" onclick="toggleAdminPanel()">Panel Admina</button>
+        <div class="logo" onclick="showCatalog()">S4MURAI PLAYER</div>
+        <div class="nav-buttons">
+            <button class="btn btn-secondary" onclick="window.open('https://discord.com', '_blank')">DISCORD</button>
+            <button class="btn" id="admin-toggle-btn" onclick="toggleAdminPanel()">PANEL ADMINA</button>
         </div>
     </header>
 
     <div class="container">
+        <!-- Baner ogłoszenia globalnego -->
+        <div id="announcement-wrapper" class="announcement-banner" style="display: none;">
+            <div id="announcement-img-container"></div>
+            <div class="announcement-content">
+                <strong>Ogłoszenie specjalne:</strong>
+                <span id="global-announcement-text"></span>
+            </div>
+        </div>
 
         <!-- WIDOK KATALOGU -->
-        <div id="catalog-view" class="visible">
-            
-            <!-- Sekcja Ogłoszeń -->
-            <div class="announcements-section">
-                <h2>Ogłoszenia</h2>
-                <div id="announcements-container">
-                    <p style="color: var(--text-muted); font-size: 14px;">Ładowanie ogłoszeń...</p>
-                </div>
-            </div>
-
-            <h2>Katalog Anime</h2>
-            <div style="margin: 15px 0;">
-                <input type="text" id="search-input" placeholder="Szukaj anime..." oninput="filterAnime()">
-            </div>
-            <div id="anime-grid" class="catalog-grid">
-                <!-- Generowane dynamicznie -->
-            </div>
-
-            <!-- Panel Propozycji -->
-            <div style="margin-top: 40px; background: var(--panel-bg); padding: 20px; border-radius: 8px; border: 1px solid var(--border);">
-                <h3>Zaproponuj Anime / Odcinek</h3>
-                <input type="text" id="suggest-anime-title" placeholder="Tytuł anime">
-                <input type="text" id="suggest-anime-info" placeholder="Dodatkowe informacje (np. sezon, opcjonalny opis)">
-                <input type="text" id="suggest-ep-link" placeholder="Link do wideo">
-                <button class="action-btn" onclick="sendSuggestion()">Wyślij propozycję</button>
-                <div id="suggestions-list" style="margin-top: 15px;"></div>
+        <div id="catalog-view">
+            <h3 class="section-title">Dostępne Seriale</h3>
+            <div id="serials-grid" class="serials-grid">
+                <!-- Ładowane dynamicznie -->
             </div>
         </div>
 
         <!-- WIDOK ODTWARZACZA -->
-        <div id="player-view" class="hidden">
-            <button class="action-btn" onclick="closePlayer()" style="margin-bottom: 15px;">← Powrót do katalogu</button>
-            
+        <div id="player-view">
+            <button class="btn btn-secondary" style="margin-bottom: 15px;" onclick="showCatalog()">← Powrót do katalogu</button>
             <div class="player-container">
-                <h1 id="player-anime-title" style="margin-top: 0;">Tytuł Anime</h1>
-                <div style="margin-bottom: 15px; color: var(--text-muted);">
-                    Ocena: <span id="avg-rating-val" style="color: #ffd700; font-weight: bold;">0.0</span> / 10 
-                    <span style="margin-left: 15px;">Oceń:</span>
-                    <span style="cursor: pointer; color: #ffd700;" onclick="rateAnime(5)">★★★★★</span>
-                </div>
-
+                <h2 id="player-serial-title" style="margin-bottom: 15px;">Tytuł Serialu</h2>
                 <div class="video-wrapper">
-                    <iframe id="main-video-iframe" src="" allowfullscreen></iframe>
+                    <iframe id="video-frame" src="" allowfullscreen></iframe>
                 </div>
-
-                <div id="episodes-bar" class="episodes-bar">
+                <h4 style="margin-bottom: 10px; font-size: 14px; color: var(--text-muted);">Odcinki:</h4>
+                <div id="episodes-container" class="episodes-list">
                     <!-- Przyciski odcinków -->
                 </div>
-
-                <!-- Sekcja Komentarzy -->
-                <div style="margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px;">
-                    <h3>Komentarze</h3>
-                    <div style="margin-bottom: 15px;">
-                        <input type="text" id="comment-author" placeholder="Twój nick..." style="max-width: 200px; display: block; margin-bottom: 8px;">
-                        <textarea id="comment-text" placeholder="Napisz komentarz..." style="height: 60px;"></textarea>
-                        <button class="action-btn" onclick="addComment()">Dodaj komentarz</button>
-                    </div>
-                    <div id="comments-list">
-                        <!-- Komentarze -->
-                    </div>
-                </div>
             </div>
         </div>
 
-        <!-- PANEL ADMINISTRACYJNY -->
-        <div id="admin-panel" class="admin-panel hidden">
-            <h2>Panel Administratora</h2>
-            
-            <!-- Logowanie do panelu -->
-            <div id="admin-login-box">
-                <p>Wpisz hasło administratora, aby zarządzać treścią:</p>
-                <input type="password" id="admin-pass-input" placeholder="Hasło...">
-                <button class="action-btn" onclick="checkAdminPassword()">Zaloguj</button>
+        <!-- PANEL ZARZĄDZANIA (ADMIN) -->
+        <div id="admin-panel" class="admin-view">
+            <h2>Panel Zarządzania</h2>
+
+            <div class="form-section">
+                <h3>Edytuj ogłoszenie główne</h3>
+                <div class="form-group">
+                    <label>Treść ogłoszenia</label>
+                    <input type="text" id="admin-announcement-input" placeholder="Wpisz treść...">
+                </div>
+                <div class="form-group">
+                    <label>Link do zdjęcia ogłoszenia (URL)</label>
+                    <input type="text" id="admin-announcement-img" placeholder="https://...">
+                </div>
+                <button class="btn" onclick="updateAnnouncement()">Zapisz ogłoszenie</button>
             </div>
 
-            <!-- Zawartość panelu (ukryta dopóki brak poprawnego hasła) -->
-            <div id="admin-content" class="hidden">
-                <button class="small-del-btn" onclick="logoutAdmin()" style="margin-bottom: 20px;">Wyloguj admina</button>
-
-                <!-- ZARZĄDZANIE OGŁOSZENIAMI -->
-                <div style="background: var(--bg-color); padding: 15px; border-radius: 6px; border: 1px solid var(--border); margin-bottom: 25px;">
-                    <h3>Zarządzaj Ogłoszeniami</h3>
-                    <form id="announcement-form" onsubmit="handleSaveAnnouncement(event)">
-                        <input type="hidden" id="announcement-id">
-                        <label>Tytuł ogłoszenia:</label>
-                        <input type="text" id="announcement-title" required>
-                        <label>Opis:</label>
-                        <textarea id="announcement-description" required style="height: 80px;"></textarea>
-                        <label>Link do zdjęcia (URL):</label>
-                        <input type="url" id="announcement-image" placeholder="https://...">
-                        <button type="submit" class="action-btn">Zapisz ogłoszenie</button>
-                        <button type="button" onclick="resetAnnouncementForm()" class="action-btn" style="background: #6c757d; margin-left: 10px;">Anuluj edycję</button>
-                    </form>
-                    <div id="admin-announcements-list" style="margin-top: 15px;"></div>
+            <div class="form-section">
+                <h3>Dodaj nowy serial</h3>
+                <div class="row">
+                    <div class="form-group">
+                        <label>Tytuł serialu</label>
+                        <input type="text" id="new-serial-title" placeholder="np. Tytuł serii...">
+                    </div>
+                    <div class="form-group">
+                        <label>Kategoria</label>
+                        <input type="text" id="new-serial-category" placeholder="np. Akcja, Romans">
+                    </div>
                 </div>
-
-                <hr style="border-color: var(--border); margin: 25px 0;">
-
-                <h3>Dodaj nowe Anime</h3>
-                <input type="text" id="new-anime-title" placeholder="Tytuł serialu">
-                <input type="text" id="new-anime-category" placeholder="Kategoria (np. Action, Romance)">
-                <input type="text" id="new-anime-image" placeholder="Link do plakatów (URL obrazka)">
-                <button class="action-btn" onclick="addAnimeShow()">Dodaj serial</button>
-
-                <hr style="border-color: var(--border); margin: 25px 0;">
-
-                <h3>Dodaj Odcinek</h3>
-                <select id="ep-anime-select">
-                    <option value="">Wybierz serial...</option>
-                </select>
-                <input type="text" id="ep-number" placeholder="Nazwa/Numer odcinka (np. Odcinek 1)">
-                <input type="text" id="ep-link" placeholder="Link do wideo (np. embed iframe / link)">
-                <button class="action-btn" onclick="addEpisode()">Dodaj odcinek</button>
-
-                <hr style="border-color: var(--border); margin: 25px 0;">
-
-                <h3>Edytuj / Usuń Serial lub Odcinek</h3>
-                <select id="edit-anime-select" onchange="loadEditData()">
-                    <option value="">Wybierz serial do edycji...</option>
-                </select>
-                <div style="margin-top: 10px;">
-                    <label>Zmień tytuł:</label>
-                    <input type="text" id="edit-anime-title">
-                    <label>Zmień kategorię:</label>
-                    <input type="text" id="edit-anime-category">
-                    <label>Zmień miniaturkę (URL):</label>
-                    <input type="text" id="edit-anime-image">
-                    <button class="action-btn" onclick="updateAnimeShow()">Zapisz zmiany w serialu</button>
-                    <button class="small-del-btn" onclick="deleteAnimeShow()" style="margin-top: 10px; width: 100%; padding: 10px;">Usuń cały serial</button>
+                <div class="form-group">
+                    <label>Link do okładki (URL)</label>
+                    <input type="text" id="new-serial-image" placeholder="https://...">
                 </div>
-                
-                <h4 style="margin-top: 20px;">Odcinki w wybranym serialu:</h4>
-                <div id="admin-episodes-container">
-                    <span style="color: var(--text-muted); font-size: 12px;">Wybierz serial powyżej, aby zobaczyć odcinki.</span>
+                <button class="btn" onclick="addSerial()">Dodaj serial</button>
+            </div>
+
+            <div class="form-section">
+                <h3>Dodaj odcinek do serialu</h3>
+                <div class="form-group">
+                    <label>Wybierz serial</label>
+                    <select id="episode-serial-select">
+                        <option value="">Wybierz serial...</option>
+                    </select>
                 </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label>Nazwa / Numer odcinka</label>
+                        <input type="text" id="episode-name" placeholder="np. Odcinek 1">
+                    </div>
+                    <div class="form-group">
+                        <label>Link do odtwarzacza lub YouTube</label>
+                        <input type="text" id="episode-link" placeholder="https://...">
+                    </div>
+                </div>
+                <button class="btn" onclick="addEpisode()">Dodaj odcinek</button>
             </div>
         </div>
-
     </div>
 
     <script>
-        // Konfiguracja Supabase (uzupełnij swoimi danymi, jeśli były w oryginale)
-        const SUPABASE_URL = 'https://twoj-projekt.supabase.co';
-        const SUPABASE_KEY = 'twoj-klucz-anon';
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const SUPABASE_URL = 'TUTAJ_WKLEJ_SWOJ_URL';
+        const SUPABASE_ANON_KEY = 'TUTAJ_WKLEJ_SWOJ_KLUCZ';
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        let allAnimeData = [];
-        let currentActiveAnime = null;
-        let userSuggestions = [];
-        let isAdminLoggedIn = false;
+        let isAdminOpen = false;
 
-        async function fetchAnime() {
-            const { data, error } = await supabaseClient
-                .from('S4muraiPlayer')
-                .select('*');
-
-            if (error) {
-                console.error('Błąd pobierania danych:', error);
-                return;
+        function toggleAdminPanel() {
+            isAdminOpen = !isAdminOpen;
+            document.getElementById('admin-panel').style.display = isAdminOpen ? 'block' : 'none';
+            document.getElementById('admin-toggle-btn').textContent = isAdminOpen ? 'ZAMKNIJ PANEL' : 'PANEL ADMINA';
+            if (isAdminOpen) {
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
             }
-
-            allAnimeData = data || [];
-            renderAnimeGrid(allAnimeData);
-            populateSelects();
-            loadAnnouncements();
         }
 
-        function renderAnimeGrid(list) {
-            const gridDiv = document.getElementById('anime-grid');
-            if (!gridDiv) return;
+        async function loadCatalog() {
+            const { data, error } = await supabaseClient.from('S4muraiPlayer').select('*');
+            const grid = document.getElementById('serials-grid');
+            grid.innerHTML = '';
 
-            if (list.length === 0) {
-                gridDiv.innerHTML = '<p style="color: var(--text-muted);">Brak dostępnych anime w bazie.</p>';
-                return;
-            }
+            if (data) {
+                data.forEach(item => {
+                    if (item.title === '_GLOBAL_CONFIG_') return;
 
-            let html = '';
-            list.forEach(anime => {
-                const rating = anime.rating_avg ? Number(anime.rating_avg).toFixed(1) : '9.1';
-                const cardIdentifier = anime.title;
-                html += `
-                    <div class="anime-card" onclick="openPlayerByTitle('${CSS.escape(cardIdentifier)}')">
-                        <div class="anime-badge">★ ${rating}</div>
-                        <img src="${anime.image || 'https://via.placeholder.com/200x280?text=Brak+Zdjecia'}" alt="${anime.title}">
-                        <div class="anime-info">
-                            <div class="anime-title">${anime.title}</div>
-                            <div class="anime-cat">${anime.category || 'Inne'}</div>
+                    const card = document.createElement('div');
+                    card.className = 'serial-card';
+                    card.onclick = () => openPlayer(item);
+
+                    card.innerHTML = `
+                        <img src="${item.image || ''}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/220x280?text=Brak+Okładki'">
+                        <div class="serial-info">
+                            <h4>${item.title}</h4>
+                            <span>${item.category || 'Inne'}</span>
                         </div>
-                    </div>
-                `;
-            });
-            gridDiv.innerHTML = html;
+                    `;
+                    grid.appendChild(card);
+                });
+            }
         }
 
-        function filterAnime() {
-            const query = document.getElementById('search-input').value.toLowerCase();
-            const filtered = allAnimeData.filter(a => 
-                (a.title && a.title.toLowerCase().includes(query)) || 
-                (a.category && a.category.toLowerCase().includes(query))
-            );
-            renderAnimeGrid(filtered);
-        }
+        function openPlayer(serial) {
+            document.getElementById('catalog-view').style.display = 'none';
+            document.getElementById('player-view').style.display = 'block';
+            document.getElementById('player-serial-title').textContent = serial.title;
 
-        function parseEpisodes(episodesField) {
+            let episodes = [];
             try {
-                if (Array.isArray(episodesField)) return episodesField;
-                if (typeof episodesField === 'string') return JSON.parse(episodesField);
-            } catch(e) {}
-            return [];
+                episodes = JSON.parse(serial.episodes || '[]');
+            } catch {
+                episodes = [];
+            }
+
+            const epContainer = document.getElementById('episodes-container');
+            epContainer.innerHTML = '';
+
+            const iframe = document.getElementById('video-frame');
+
+            if (episodes.length > 0) {
+                iframe.src = episodes[0].link || '';
+                episodes.forEach((ep, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'ep-btn' + (index === 0 ? ' active' : '');
+                    btn.textContent = ep.title;
+                    btn.onclick = () => {
+                        document.querySelectorAll('.ep-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        iframe.src = ep.link;
+                    };
+                    epContainer.appendChild(btn);
+                });
+            } else {
+                iframe.src = '';
+                epContainer.innerHTML = '<span style="color:var(--text-muted)">Brak odcinków w tym serialu.</span>';
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function formatVideoLink(link) {
-            return link;
+        function showCatalog() {
+            document.getElementById('player-view').style.display = 'none';
+            document.getElementById('catalog-view').style.display = 'block';
+            loadCatalog();
         }
 
-        function openPlayerByTitle(title) {
-            const anime = allAnimeData.find(a => a.title === title);
-            if (!anime) return;
+        async function updateAnnouncement() {
+            const newText = document.getElementById('admin-announcement-input').value;
+            const newImg = document.getElementById('admin-announcement-img').value;
 
-            currentActiveAnime = anime;
-            const catalogView = document.getElementById('catalog-view');
-            const playerView = document.getElementById('player-view');
+            if (!newText) {
+                alert('Treść ogłoszenia nie może być pusta!');
+                return;
+            }
 
-            catalogView.classList.remove('visible');
-            catalogView.classList.add('hidden');
-            playerView.classList.remove('hidden');
-            playerView.classList.add('visible');
+            const payloadData = JSON.stringify({ text: newText, img: newImg });
 
-            document.getElementById('player-anime-title').textContent = anime.title;
-            document.getElementById('avg-rating-val').textContent = anime.rating_avg ? Number(anime.rating_avg).toFixed(1) : '9.1';
+            try {
+                const { data } = await supabaseClient
+                    .from('S4muraiPlayer')
+                    .select('title')
+                    .eq('title', '_GLOBAL_CONFIG_')
+                    .single();
 
-            setTimeout(() => {
-                const episodesBar = document.getElementById('episodes-bar');
-                const iframe = document.getElementById('main-video-iframe');
-                let eps = parseEpisodes(anime.episodes);
-
-                if (eps.length === 0) {
-                    episodesBar.innerHTML = '<span style="color: var(--text-muted); font-size: 13px;">Brak dostępnych odcinków dla tego serialu.</span>';
-                    iframe.src = '';
+                let error;
+                if (data) {
+                    const res = await supabaseClient
+                        .from('S4muraiPlayer')
+                        .update({ category: payloadData })
+                        .eq('title', '_GLOBAL_CONFIG_');
+                    error = res.error;
                 } else {
-                    let buttonsHtml = '';
-                    eps.forEach((ep, index) => {
-                        const activeClass = index === 0 ? 'active' : '';
-                        buttonsHtml += `<button class="ep-select-btn ${activeClass}" onclick="playEpisode('${ep.link}', this)">${ep.title}</button>`;
-                    });
-                    episodesBar.innerHTML = buttonsHtml;
-                    iframe.src = formatVideoLink(eps[0].link);
+                    const res = await supabaseClient
+                        .from('S4muraiPlayer')
+                        .insert([{ title: '_GLOBAL_CONFIG_', category: payloadData, episodes: '[]' }]);
+                    error = res.error;
                 }
 
-                loadComments();
-            }, 150);
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function playEpisode(link, btnElement) {
-            document.getElementById('main-video-iframe').src = formatVideoLink(link);
-            document.querySelectorAll('.ep-select-btn').forEach(b => b.classList.remove('active'));
-            btnElement.classList.add('active');
-        }
-
-        function closePlayer() {
-            const catalogView = document.getElementById('catalog-view');
-            const playerView = document.getElementById('player-view');
-
-            playerView.classList.remove('visible');
-            playerView.classList.add('hidden');
-
-            setTimeout(() => {
-                document.getElementById('main-video-iframe').src = '';
-                catalogView.classList.remove('hidden');
-                catalogView.classList.add('visible');
-            }, 150);
-
-            currentActiveAnime = null;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        async function rateAnime(stars) {
-            if (!currentActiveAnime) return;
-            
-            let currentTotal = currentActiveAnime.rating_total || 9.1;
-            let newAvg = ((currentTotal + stars * 2) / 2);
-            if (newAvg > 10) newAvg = 10;
-
-            const { error } = await supabaseClient
-                .from('S4muraiPlayer')
-                .update({ rating_avg: newAvg, rating_total: stars })
-                .eq('title', currentActiveAnime.title);
-
-            if (!error) {
-                document.getElementById('avg-rating-val').textContent = newAvg.toFixed(1);
-                alert('Dziękujemy za ocenę!');
-                await fetchAnime();
+                if (error) throw error;
+                loadAnnouncement();
+                alert('Ogłoszenie zaktualizowane!');
+            } catch (err) {
+                alert('Błąd: ' + err.message);
             }
         }
 
-        function parseComments(commentsField) {
+        async function loadAnnouncement() {
             try {
-                if (Array.isArray(commentsField)) return commentsField;
-                if (typeof commentsField === 'string') return JSON.parse(commentsField);
-            } catch(e) {}
-            return [];
+                const { data } = await supabaseClient
+                    .from('S4muraiPlayer')
+                    .select('category')
+                    .eq('title', '_GLOBAL_CONFIG_')
+                    .single();
+
+                if (data && data.category) {
+                    let bannerData;
+                    try {
+                        bannerData = JSON.parse(data.category);
+                    } catch {
+                        bannerData = { text: data.category, img: '' };
+                    }
+
+                    if (bannerData.text) {
+                        document.getElementById('global-announcement-text').textContent = bannerData.text;
+                        const imgContainer = document.getElementById('announcement-img-container');
+                        imgContainer.innerHTML = bannerData.img ? `<img src="${bannerData.img}" alt="Obrazek">` : '';
+                        document.getElementById('announcement-wrapper').style.display = 'flex';
+                    }
+                }
+            } catch (e) {}
         }
 
-        async function loadComments() {
-            if (!currentActiveAnime) return;
-            const listDiv = document.getElementById('comments-list');
-            const comments = parseComments(currentActiveAnime.comments);
-
-            if (comments.length === 0) {
-                listDiv.innerHTML = '<span style="color: var(--text-muted); font-size: 12px;">Brak komentarzy. Bądź pierwszy!</span>';
-                return;
-            }
-
-            let html = '';
-            comments.forEach(c => {
-                html += `
-                    <div class="comment-item">
-                        <div class="comment-author">${c.author}</div>
-                        <div class="comment-text">${c.text}</div>
-                    </div>
-                `;
-            });
-            listDiv.innerHTML = html;
-        }
-
-        async function addComment() {
-            if (!currentActiveAnime) return;
-            const author = document.getElementById('comment-author').value.trim();
-            const text = document.getElementById('comment-text').value.trim();
-
-            if (!author || !text) {
-                alert('Wpisz swój nick i treść komentarza!');
-                return;
-            }
-
-            let comments = parseComments(currentActiveAnime.comments);
-            comments.unshift({ author, text });
-
-            const { error } = await supabaseClient
-                .from('S4muraiPlayer')
-                .update({ comments: comments })
-                .eq('title', currentActiveAnime.title);
-
-            if (error) {
-                alert('Błąd dodawania komentarza: ' + error.message);
-            } else {
-                currentActiveAnime.comments = comments;
-                document.getElementById('comment-text').value = '';
-                loadComments();
+        async function loadSerialsSelect() {
+            const { data } = await supabaseClient.from('S4muraiPlayer').select('title');
+            const select = document.getElementById('episode-serial-select');
+            select.innerHTML = '<option value="">Wybierz serial...</option>';
+            if (data) {
+                data.forEach(item => {
+                    if (item.title !== '_GLOBAL_CONFIG_') {
+                        const opt = document.createElement('option');
+                        opt.value = item.title;
+                        opt.textContent = item.title;
+                        select.appendChild(opt);
+                    }
+                });
             }
         }
 
-        function populateSelects() {
-            const epSelect = document.getElementById('ep-anime-select');
-            const editSelect = document.getElementById('edit-anime-select');
-            
-            const currentSelectedEdit = editSelect ? editSelect.value : '';
-
-            let options = '<option value="">Wybierz serial...</option>';
-            allAnimeData.forEach(anime => {
-                options += `<option value="${anime.title}">${anime.title}</option>`;
-            });
-            
-            if(epSelect) epSelect.innerHTML = options;
-            if(editSelect) {
-                editSelect.innerHTML = options;
-                editSelect.value = currentSelectedEdit;
-            }
-        }
-
-        async function addAnimeShow() {
-            const title = document.getElementById('new-anime-title').value;
-            const category = document.getElementById('new-anime-category').value;
-            const image = document.getElementById('new-anime-image').value;
+        async function addSerial() {
+            const title = document.getElementById('new-serial-title').value;
+            const category = document.getElementById('new-serial-category').value;
+            const image = document.getElementById('new-serial-image').value;
 
             if (!title) {
-                alert('Wprowadź tytuł serialu!');
+                alert('Podaj tytuł serialu!');
                 return;
             }
 
             const { error } = await supabaseClient
                 .from('S4muraiPlayer')
-                .insert([{ title, category, image, episodes: [], comments: [], rating_avg: 9.1 }]);
+                .insert([{ title, category, image, episodes: JSON.stringify([]) }]);
 
             if (error) {
                 alert('Błąd: ' + error.message);
             } else {
-                document.getElementById('new-anime-title').value = '';
-                document.getElementById('new-anime-category').value = '';
-                document.getElementById('new-anime-image').value = '';
-                alert('Dodano serial pomyślnie!');
-                await fetchAnime();
+                alert('Serial dodany pomyślnie!');
+                loadSerialsSelect();
+                loadCatalog();
             }
         }
 
         async function addEpisode() {
-            const animeTitle = document.getElementById('ep-anime-select').value;
-            const epTitle = document.getElementById('ep-number').value;
-            const epLink = document.getElementById('ep-link').value;
+            const serialTitle = document.getElementById('episode-serial-select').value;
+            const epName = document.getElementById('episode-name').value;
+            const epLink = document.getElementById('episode-link').value;
 
-            if (!animeTitle || !epTitle || !epLink) {
-                alert('Wypełnij wszystkie pola odcinka!');
+            if (!serialTitle || !epName) {
+                alert('Wybierz serial i podaj nazwę odcinka!');
                 return;
             }
-
-            try {
-                const { data: freshData, error: fetchError } = await supabaseClient
-                    .from('S4muraiPlayer')
-                    .select('episodes')
-                    .eq('title', animeTitle)
-                    .single();
-
-                if (fetchError) throw fetchError;
-
-                let eps = parseEpisodes(freshData.episodes);
-                eps.push({ title: epTitle, link: epLink });
-
-                const { error: updateError } = await supabaseClient
-                    .from('S4muraiPlayer')
-                    .update({ episodes: eps })
-                    .eq('title', animeTitle);
-
-                if (updateError) throw updateError;
-
-                document.getElementById('ep-number').value = '';
-                document.getElementById('ep-link').value = '';
-                alert('Dodano odcinek pomyślnie!');
-                await fetchAnime();
-            } catch (err) {
-                alert('Błąd zapisu odcinka: ' + (err.message || JSON.stringify(err)));
-            }
-        }
-
-        function loadEditData() {
-            const animeTitle = document.getElementById('edit-anime-select').value;
-            const epContainer = document.getElementById('admin-episodes-container');
-
-            if (!animeTitle) {
-                document.getElementById('edit-anime-title').value = '';
-                document.getElementById('edit-anime-image').value = '';
-                document.getElementById('edit-anime-category').value = '';
-                if(epContainer) epContainer.innerHTML = '<span style="color: var(--text-muted); font-size: 12px;">Wybierz serial powyżej, aby zobaczyć odcinki.</span>';
-                return;
-            }
-
-            const animeObj = allAnimeData.find(a => a.title === animeTitle);
-            if (animeObj) {
-                document.getElementById('edit-anime-title').value = animeObj.title || '';
-                document.getElementById('edit-anime-image').value = animeObj.image || '';
-                document.getElementById('edit-anime-category').value = animeObj.category || '';
-
-                let eps = parseEpisodes(animeObj.episodes);
-                if (eps.length === 0) {
-                    epContainer.innerHTML = '<span style="color: var(--text-muted); font-size: 12px;">Brak odcinków w tym serialu.</span>';
-                } else {
-                    let epHtml = '';
-                    eps.forEach((ep, index) => {
-                        epHtml += `
-                            <div class="admin-ep-item">
-                                <span><b>${ep.title}</b></span>
-                                <button class="small-del-btn" onclick="deleteEpisode('${CSS.escape(animeTitle)}', ${index})">Usuń</button>
-                            </div>
-                        `;
-                    });
-                    epContainer.innerHTML = epHtml;
-                }
-            }
-        }
-
-        async function deleteEpisode(animeTitle, epIndex) {
-            if (!confirm('Na pewno chcesz usunąć ten odcinek?')) return;
-
-            try {
-                const animeObj = allAnimeData.find(a => a.title === animeTitle);
-                if (!animeObj) return;
-
-                let eps = parseEpisodes(animeObj.episodes);
-                eps.splice(epIndex, 1);
-
-                const { error } = await supabaseClient
-                    .from('S4muraiPlayer')
-                    .update({ episodes: eps })
-                    .eq('title', animeTitle);
-
-                if (error) throw error;
-
-                await fetchAnime();
-                loadEditData();
-                alert('Odcinek został usunięty!');
-            } catch (err) {
-                alert('Błąd podczas usuwania odcinka: ' + err.message);
-            }
-        }
-
-        async function updateAnimeShow() {
-            const oldTitle = document.getElementById('edit-anime-select').value;
-            const newTitle = document.getElementById('edit-anime-title').value;
-            const newImage = document.getElementById('edit-anime-image').value;
-            const newCat = document.getElementById('edit-anime-category').value;
-
-            if (!oldTitle || !newTitle) {
-                alert('Wybierz serial i podaj tytuł!');
-                return;
-            }
-
-            const { error } = await supabaseClient
-                .from('S4muraiPlayer')
-                .update({ title: newTitle, image: newImage, category: newCat })
-                .eq('title', oldTitle);
-
-            if (error) {
-                alert('Błąd edycji: ' + error.message);
-            } else {
-                alert('Zaktualizowano pomyślnie!');
-                await fetchAnime();
-            }
-        }
-
-        async function deleteAnimeShow() {
-            const titleToDelete = document.getElementById('edit-anime-select').value;
-            if (!titleToDelete) {
-                alert('Najpierw wybierz serial do usunięcia z listy!');
-                return;
-            }
-
-            if (!confirm(`Czy na pewno chcesz CAŁOWICIE usunąć serial "${titleToDelete}" wraz ze wszystkimi odcinkami?`)) return;
-
-            const { error } = await supabaseClient
-                .from('S4muraiPlayer')
-                .delete()
-                .eq('title', titleToDelete);
-
-            if (error) {
-                alert('Błąd usuwania serialu: ' + error.message);
-            } else {
-                alert('Serial został usunięty.');
-                document.getElementById('edit-anime-select').value = '';
-                loadEditData();
-                await fetchAnime();
-            }
-        }
-
-        function sendSuggestion() {
-            const title = document.getElementById('suggest-anime-title').value;
-            const info = document.getElementById('suggest-anime-info').value;
-            const link = document.getElementById('suggest-ep-link').value;
-
-            if (!title || !link) {
-                alert('Podaj przynajmniej tytuł anime oraz link do wideo!');
-                return;
-            }
-
-            userSuggestions.push({ title, info, link });
-            
-            let listHtml = '';
-            userSuggestions.forEach((s) => {
-                listHtml += `<div>• <b>${s.title}</b> (${s.info || 'brak dodatków'}) - <a href="${s.link}" target="_blank" style="color: var(--accent);">Link</a></div>`;
-            });
-            document.getElementById('suggestions-list').innerHTML = listHtml;
-
-            document.getElementById('suggest-anime-title').value = '';
-            document.getElementById('suggest-anime-info').value = '';
-            document.getElementById('suggest-ep-link').value = '';
-            alert('Propozycja została wysłana!');
-        }
-
-        // --- OBSŁUGA PANELU ADMINA I HASŁA ---
-        function toggleAdminPanel() {
-            const panel = document.getElementById('admin-panel');
-            panel.classList.toggle('hidden');
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-        }
-
-        function checkAdminPassword() {
-            const pass = document.getElementById('admin-pass-input').value;
-            if (pass === 'Korneliusz1111') {
-                isAdminLoggedIn = true;
-                document.getElementById('admin-login-box').classList.add('hidden');
-                document.getElementById('admin-content').classList.remove('hidden');
-                loadAdminAnnouncements();
-            } else {
-                alert('Niepoprawne hasło!');
-            }
-        }
-
-        function logoutAdmin() {
-            isAdminLoggedIn = false;
-            document.getElementById('admin-pass-input').value = '';
-            document.getElementById('admin-content').classList.add('hidden');
-            document.getElementById('admin-login-box').classList.remove('hidden');
-        }
-
-        // --- MODUŁ OGŁOSZEŃ (Baza Supabase: tabela "announcements") ---
-        async function loadAnnouncements() {
-            const container = document.getElementById('announcements-container');
-            if (!container) return;
 
             const { data, error } = await supabaseClient
-                .from('announcements')
-                .select('*')
-                .order('created_at', { ascending: false });
+                .from('S4muraiPlayer')
+                .select('episodes')
+                .eq('title', serialTitle)
+                .single();
 
-            if (error || !data || data.length === 0) {
-                container.innerHTML = '<p style="color: var(--text-muted); font-size: 14px;">Brak aktualnych ogłoszeń.</p>';
+            if (error) {
+                alert('Nie znaleziono serialu.');
                 return;
             }
 
-            let html = '';
-            data.forEach(item => {
-                html += `
-                    <div class="announcement-card">
-                        ${item.image_url ? `<img src="${item.image_url}" alt="${item.title}">` : ''}
-                        <h3 style="margin-top: 0; color: var(--text-main);">${item.title}</h3>
-                        <p style="margin-bottom: 0; color: var(--text-muted); white-space: pre-wrap; font-size: 14px;">${item.description}</p>
-                    </div>
-                `;
-            });
-            container.innerHTML = html;
-        }
-
-        async function loadAdminAnnouncements() {
-            const listContainer = document.getElementById('admin-announcements-list');
-            if (!listContainer) return;
-
-            const { data, error } = await supabaseClient
-                .from('announcements')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (error || !data || data.length === 0) {
-                listContainer.innerHTML = '<p style="color: var(--text-muted); font-size: 13px;">Brak ogłoszeń w bazie.</p>';
-                return;
+            let episodesList = [];
+            try {
+                episodesList = JSON.parse(data.episodes || '[]');
+            } catch {
+                episodesList = [];
             }
 
-            let html = '<h4 style="margin-bottom: 10px;">Istniejące ogłoszenia:</h4>';
-            data.forEach(item => {
-                html += `
-                    <div style="background: var(--panel-bg); padding: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); border-radius: 4px;">
-                        <span style="font-size: 14px;"><strong>${item.title}</strong></span>
-                        <div>
-                            <button onclick='editAnnouncement(${JSON.stringify(item)})' class="action-btn" style="padding: 4px 10px; font-size: 12px; background: #ffc107; color: #000; margin-right: 5px;">Edytuj</button>
-                            <button onclick="deleteAnnouncement('${item.id}')" class="small-del-btn">Usuń</button>
-                        </div>
-                    </div>
-                `;
-            });
-            listContainer.innerHTML = html;
-        }
+            episodesList.push({ title: epName, link: epLink });
 
-        async function handleSaveAnnouncement(event) {
-            event.preventDefault();
-            const id = document.getElementById('announcement-id').value;
-            const title = document.getElementById('announcement-title').value;
-            const description = document.getElementById('announcement-description').value;
-            const image_url = document.getElementById('announcement-image').value;
+            const { error: updateError } = await supabaseClient
+                .from('S4muraiPlayer')
+                .update({ episodes: JSON.stringify(episodesList) })
+                .eq('title', serialTitle);
 
-            const payload = { title, description, image_url };
-
-            let error;
-            if (id) {
-                const res = await supabaseClient.from('announcements').update(payload).eq('id', id);
-                error = res.error;
+            if (updateError) {
+                alert('Błąd: ' + updateError.message);
             } else {
-                const res = await supabaseClient.from('announcements').insert([payload]);
-                error = res.error;
-            }
-
-            if (error) {
-                alert('Błąd podczas zapisu ogłoszenia: ' + error.message);
-            } else {
-                alert('Ogłoszenie zapisane pomyślnie!');
-                resetAnnouncementForm();
-                loadAdminAnnouncements();
-                loadAnnouncements();
+                alert('Odcinek dodany pomyślnie!');
             }
         }
 
-        window.editAnnouncement = function(item) {
-            document.getElementById('announcement-id').value = item.id;
-            document.getElementById('announcement-title').value = item.title;
-            document.getElementById('announcement-description').value = item.description;
-            document.getElementById('announcement-image').value = item.image_url || '';
-            window.scrollTo({ top: document.getElementById('announcement-form').offsetTop, behavior: 'smooth' });
-        }
-
-        window.resetAnnouncementForm = function() {
-            document.getElementById('announcement-id').value = '';
-            document.getElementById('announcement-form').reset();
-        }
-
-        window.deleteAnnouncement = async function(id) {
-            if (!confirm('Czy na pewno chcesz usunąć to ogłoszenie?')) return;
-
-            const { error } = await supabaseClient.from('announcements').delete().eq('id', id);
-            if (error) {
-                alert('Błąd usuwania: ' + error.message);
-            } else {
-                loadAdminAnnouncements();
-                loadAnnouncements();
-            }
-        }
-
-        // Inicjalizacja startowa
-        fetchAnime();
+        window.onload = () => {
+            loadAnnouncement();
+            loadCatalog();
+            loadSerialsSelect();
+        };
     </script>
 </body>
 </html>
