@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>S4muraiPlayer</title>
-    <!-- Supabase Client -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -102,21 +100,23 @@
 <script>
     const SUPABASE_URL = 'https://dmxjcgriqxsxcsvxihed.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_XTe3B_5j4za4WG67lCVAg_CMvVnMyL';
-    
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     async function fetchAnime() {
         const errorDiv = document.getElementById('error-msg');
         const listDiv = document.getElementById('anime-list');
-        
         errorDiv.textContent = '';
         
         try {
-            const { data, error } = await supabaseClient
-                .from('S4muraiPlayer')
-                .select('*');
+            const response = await fetch(`${SUPABASE_URL}/rest/v1/S4muraiPlayer?select=*`, {
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_KEY}`
+                }
+            });
 
-            if (error) throw error;
+            if (!response.ok) throw new Error('Błąd HTTP: ' + response.status);
+
+            const data = await response.json();
 
             if (!data || data.length === 0) {
                 listDiv.innerHTML = '<p>Brak dodanych anime w bazie.</p>';
@@ -145,7 +145,7 @@
     }
 
     async function addAnime() {
-        const pass = document.getElementById('admin-pass'].value;
+        const pass = document.getElementById('admin-pass').value;
         const title = document.getElementById('anime-title').value;
         const category = document.getElementById('anime-category').value;
         const image = document.getElementById('anime-image').value;
@@ -161,19 +161,28 @@
             return;
         }
 
-        const { error } = await supabaseClient
-            .from('S4muraiPlayer')
-            .insert([{ title, category, image, episodes }]);
+        try {
+            const response = await fetch(`${SUPABASE_URL}/rest/v1/S4muraiPlayer`, {
+                method: 'POST',
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_KEY}`,
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=minimal'
+                },
+                body: JSON.stringify({ title, category, image, episodes })
+            });
 
-        if (error) {
-            alert('Błąd podczas dodawania: ' + error.message);
-        } else {
+            if (!response.ok) throw new Error('Błąd zapisu: ' + response.status);
+
             alert('Anime zostało dodane pomyślnie!');
             document.getElementById('anime-title').value = '';
             document.getElementById('anime-image').value = '';
             document.getElementById('anime-episodes').value = '';
             document.getElementById('admin-pass').value = '';
             fetchAnime();
+        } catch (err) {
+            alert('Błąd podczas dodawania: ' + err.message);
         }
     }
 
