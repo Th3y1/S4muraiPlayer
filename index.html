@@ -9,162 +9,205 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #121212;
-            color: #ffffff;
+            background-color: #0b0b0e;
+            color: #f1f1f1;
             margin: 0;
-            padding: 20px;
+            padding: 25px;
         }
         .container {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 0 auto;
         }
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid #2a2a2a;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
+            border-bottom: 2px solid #1f1f2e;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
         }
         h1 {
-            color: #e50914;
+            color: #ff334b;
             margin: 0;
+            font-size: 32px;
+            letter-spacing: 1px;
+            text-shadow: 0 0 15px rgba(255, 51, 75, 0.4);
         }
         .dev-btn {
-            background: #2a2a2a;
+            background: #191922;
             color: #fff;
-            border: 1px solid #444;
-            padding: 8px 16px;
-            border-radius: 4px;
+            border: 1px solid #2f2f42;
+            padding: 10px 20px;
+            border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
+            transition: 0.2s;
         }
         .dev-btn:hover {
-            background: #e50914;
-            border-color: #e50914;
+            background: #ff334b;
+            border-color: #ff334b;
+            box-shadow: 0 0 10px rgba(255, 51, 75, 0.5);
         }
         /* Panel Dev */
         #dev-panel {
             display: none;
-            background: #1e1e1e;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.7);
-            margin-bottom: 30px;
-            border: 1px solid #333;
+            background: #13131a;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.8);
+            margin-bottom: 35px;
+            border: 1px solid #28283d;
         }
         .admin-section {
-            background: #252525;
-            padding: 15px;
+            background: #1a1a24;
+            padding: 18px;
             margin-top: 15px;
-            border-radius: 6px;
+            border-radius: 8px;
+            border: 1px solid #252536;
         }
         input, select {
             width: 100%;
-            padding: 10px;
-            margin: 8px 0;
-            background: #2a2a2a;
-            border: 1px solid #444;
+            padding: 12px;
+            margin: 10px 0;
+            background: #111118;
+            border: 1px solid #2e2e42;
             color: #fff;
-            border-radius: 4px;
+            border-radius: 6px;
             box-sizing: border-box;
+            outline: none;
+        }
+        input:focus, select:focus {
+            border-color: #ff334b;
         }
         button.action-btn {
             width: 100%;
-            padding: 10px;
-            background: #e50914;
+            padding: 12px;
+            background: #ff334b;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 5px;
+            margin-top: 8px;
+            transition: 0.2s;
         }
         button.action-btn:hover {
-            background: #b20710;
+            background: #e0263c;
+            box-shadow: 0 0 10px rgba(255, 51, 75, 0.4);
         }
         /* Kategorie - Filtry */
         .categories-bar {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 12px;
+            margin-bottom: 30px;
             flex-wrap: wrap;
         }
         .cat-chip {
-            background: #1e1e1e;
-            border: 1px solid #444;
-            color: #fff;
-            padding: 8px 16px;
-            border-radius: 20px;
+            background: #15151c;
+            border: 1px solid #262636;
+            color: #a0a0b0;
+            padding: 10px 20px;
+            border-radius: 25px;
             cursor: pointer;
             font-size: 14px;
-            transition: 0.2s;
+            font-weight: 600;
+            transition: all 0.25s ease;
         }
         .cat-chip:hover, .cat-chip.active {
-            background: #e50914;
-            border-color: #e50914;
+            background: #ff334b;
+            border-color: #ff334b;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(255, 51, 75, 0.3);
         }
-        /* Siatka Anime */
+        /* Siatka Anime z animacją podnoszenia */
         .anime-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 25px;
         }
         .anime-card {
-            background: #1e1e1e;
-            border-radius: 8px;
+            background: #13131a;
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
             display: flex;
             flex-direction: column;
+            border: 1px solid #1f1f2e;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        /* KLUCZOWY EFKET: Unoszenie i podświetlenie po najechaniu */
+        .anime-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(255, 51, 75, 0.25);
+            border-color: #ff334b;
         }
         .anime-card img {
             width: 100%;
-            height: 350px;
+            height: 330px;
             object-fit: cover;
+            transition: filter 0.3s ease;
+        }
+        .anime-card:hover img {
+            filter: brightness(1.1);
         }
         .anime-info {
-            padding: 15px;
+            padding: 18px;
             display: flex;
             flex-direction: column;
             flex-grow: 1;
         }
         .anime-title {
-            font-size: 18px;
+            font-size: 17px;
             font-weight: bold;
-            margin: 0 0 5px 0;
+            margin: 0 0 6px 0;
+            color: #fff;
         }
         .anime-cat {
-            color: #888;
-            font-size: 13px;
+            color: #888899;
+            font-size: 12px;
             margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .episodes-list {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
             margin-top: auto;
+            max-height: 100px;
+            overflow-y: auto;
+            padding-right: 2px;
+        }
+        /* Styl scrollbara w liście odcinków */
+        .episodes-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .episodes-list::-webkit-scrollbar-thumb {
+            background: #2e2e42;
+            border-radius: 4px;
         }
         .ep-btn {
-            background: #2a2a2a;
-            color: #fff;
-            padding: 6px 12px;
+            background: #1a1a24;
+            color: #d0d0e0;
+            padding: 6px 10px;
             border-radius: 4px;
             text-decoration: none;
-            font-size: 13px;
-            border: 1px solid #444;
+            font-size: 12px;
+            border: 1px solid #2b2b3d;
             transition: 0.2s;
         }
         .ep-btn:hover {
-            background: #e50914;
-            border-color: #e50914;
+            background: #ff334b;
+            color: #fff;
+            border-color: #ff334b;
         }
         #error-msg {
             color: #ff5555;
-            background: #331111;
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 15px;
+            background: #260d0d;
+            border: 1px solid #521a1a;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
             white-space: pre-wrap;
             font-family: monospace;
             display: none;
@@ -185,7 +228,6 @@
     <div id="dev-panel">
         <h2>Panel Zarządzania (Dev)</h2>
         
-        <!-- 1. Dodawanie nowego serialu -->
         <div class="admin-section">
             <h3>Dodaj Nowy Serial</h3>
             <input type="text" id="new-anime-title" placeholder="Tytuł serialu (np. Solo Leveling)">
@@ -199,7 +241,6 @@
             <button class="action-btn" onclick="addAnimeShow()">Utwórz Serial</button>
         </div>
 
-        <!-- 2. Dodawanie odcinka do serialu -->
         <div class="admin-section">
             <h3>Dodaj Odcinek do Serialu</h3>
             <select id="ep-anime-select">
@@ -210,7 +251,6 @@
             <button class="action-btn" onclick="addEpisode()">Dodaj Odcinek</button>
         </div>
 
-        <!-- 3. Edycja nazwy / okładki / kategorii serialu -->
         <div class="admin-section">
             <h3>Edytuj Istniejący Serial</h3>
             <select id="edit-anime-select" onchange="loadEditData()">
@@ -311,7 +351,6 @@
 
         let html = '';
         filtered.forEach(anime => {
-            // Super-bezpieczne parsowanie odcinków (zabezpieczenie przed null, obiektami lub stringami)
             let eps = [];
             try {
                 if (Array.isArray(anime.episodes)) {
@@ -326,7 +365,7 @@
 
             let episodesHtml = '';
             if (eps.length === 0) {
-                episodesHtml = '<span style="color: #666; font-size: 13px;">Brak odcinków</span>';
+                episodesHtml = '<span style="color: #555566; font-size: 12px;">Brak odcinków</span>';
             } else {
                 eps.forEach(ep => {
                     if (ep && ep.title && ep.link) {
@@ -337,10 +376,10 @@
 
             html += `
                 <div class="anime-card">
-                    <img src="${anime.image || 'https://via.placeholder.com/280x350?text=Brak+Okladki'}" alt="Okładka">
+                    <img src="${anime.image || 'https://via.placeholder.com/240x330?text=Brak+Okladki'}" alt="Okładka">
                     <div class="anime-info">
                         <div class="anime-title">${anime.title}</div>
-                        <div class="anime-cat">Kategoria: ${anime.category || 'Inne'}</div>
+                        <div class="anime-cat">${anime.category || 'Inne'}</div>
                         <div class="episodes-list">
                             ${episodesHtml}
                         </div>
@@ -444,12 +483,13 @@
     }
 
     async function updateAnimeShow() {
-        const animeId = document.getElementById('edit-anime-select').value;
+        const animeId = document.getElementById('edit-anime-select-select') || document.getElementById('edit-anime-select').value;
+        const targetId = document.getElementById('edit-anime-select').value;
         const newTitle = document.getElementById('edit-anime-title').value;
         const newImage = document.getElementById('edit-anime-image').value;
         const newCat = document.getElementById('edit-anime-category').value;
 
-        if (!animeId || !newTitle) {
+        if (!targetId || !newTitle) {
             alert('Wybierz serial i podaj tytuł!');
             return;
         }
@@ -457,7 +497,7 @@
         const { error } = await supabaseClient
             .from('S4muraiPlayer')
             .update({ title: newTitle, image: newImage, category: newCat })
-            .eq('id', animeId);
+            .eq('id', targetId);
 
         if (error) {
             alert('Błąd edycji: ' + error.message);
