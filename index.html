@@ -9,226 +9,165 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0d0d0d;
+            background-color: #121212;
             color: #ffffff;
             margin: 0;
             padding: 20px;
         }
         .container {
-            max-width: 1100px;
+            max-width: 1000px;
             margin: 0 auto;
         }
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid #222;
+            border-bottom: 2px solid #2a2a2a;
             padding-bottom: 15px;
-            margin-bottom: 30px;
-            position: relative;
+            margin-bottom: 20px;
         }
-        header::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 150px;
-            height: 2px;
-            background: #e50914;
-        }
-        .logo {
-            font-size: 28px;
-            font-weight: 900;
-            letter-spacing: 1px;
-            color: #fff;
-        }
-        .logo span {
+        h1 {
             color: #e50914;
-            display: block;
-            font-size: 20px;
-            margin-top: -5px;
+            margin: 0;
         }
-        .header-right {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-        .discord-btn {
-            background: #5865F2;
-            color: white;
+        .dev-btn {
+            background: #2a2a2a;
+            color: #fff;
+            border: 1px solid #444;
             padding: 8px 16px;
             border-radius: 4px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        .admin-toggle-btn {
-            background: #e50914;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            font-weight: bold;
             cursor: pointer;
-            text-transform: uppercase;
-            font-size: 13px;
-            letter-spacing: 1px;
+            font-weight: bold;
         }
-        .admin-toggle-btn:hover {
-            background: #b20710;
+        .dev-btn:hover {
+            background: #e50914;
+            border-color: #e50914;
         }
-        /* Panel Administratora (ukryty domyślnie) */
-        #admin-panel {
+        /* Panel Dev */
+        #dev-panel {
             display: none;
-            background: #161616;
-            border: 1px solid #333;
-            border-left: 4px solid #e50914;
+            background: #1e1e1e;
             padding: 20px;
-            border-radius: 6px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.7);
             margin-bottom: 30px;
+            border: 1px solid #333;
         }
         .admin-section {
-            background: #1f1f1f;
+            background: #252525;
             padding: 15px;
             margin-top: 15px;
-            border-radius: 4px;
-        }
-        .admin-section h3 {
-            margin-top: 0;
-            color: #e50914;
-            font-size: 16px;
+            border-radius: 6px;
         }
         input, select {
             width: 100%;
             padding: 10px;
             margin: 8px 0;
-            background: #121212;
-            border: 1px solid #333;
+            background: #2a2a2a;
+            border: 1px solid #444;
             color: #fff;
             border-radius: 4px;
             box-sizing: border-box;
         }
-        button.submit-btn {
+        button.action-btn {
+            width: 100%;
+            padding: 10px;
             background: #e50914;
             color: white;
             border: none;
-            padding: 10px;
             border-radius: 4px;
             font-weight: bold;
             cursor: pointer;
-            width: 100%;
             margin-top: 5px;
-            text-transform: uppercase;
         }
-        button.submit-btn:hover {
+        button.action-btn:hover {
             background: #b20710;
         }
-        /* Wyszukiwarka i kategorie */
-        .search-bar {
-            width: 100%;
-            padding: 14px 20px;
-            background: #161616;
-            border: 1px solid #333;
-            color: white;
-            border-radius: 4px;
-            font-size: 16px;
-            margin-bottom: 20px;
-            box-sizing: border-box;
-        }
-        .categories {
+        /* Kategorie - Filtry */
+        .categories-bar {
             display: flex;
             gap: 10px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
         }
-        .cat-btn {
-            background: #161616;
-            border: 1px solid #333;
-            color: #bbb;
+        .cat-chip {
+            background: #1e1e1e;
+            border: 1px solid #444;
+            color: #fff;
             padding: 8px 16px;
             border-radius: 20px;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 14px;
+            transition: 0.2s;
         }
-        .cat-btn:hover, .cat-btn.active {
+        .cat-chip:hover, .cat-chip.active {
             background: #e50914;
-            color: white;
             border-color: #e50914;
         }
-        /* Katalog Siatka */
-        .catalog-title {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            border-left: 3px solid #e50914;
-            padding-left: 10px;
-        }
+        /* Siatka Anime */
         .anime-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 20px;
         }
         .anime-card {
-            background: #161616;
-            border-radius: 6px;
+            background: #1e1e1e;
+            border-radius: 8px;
             overflow: hidden;
-            border: 1px solid #222;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
             display: flex;
             flex-direction: column;
         }
         .anime-card img {
             width: 100%;
-            height: 280px;
+            height: 350px;
             object-fit: cover;
         }
         .anime-info {
-            padding: 12px;
+            padding: 15px;
             display: flex;
             flex-direction: column;
             flex-grow: 1;
         }
-        .anime-name {
+        .anime-title {
+            font-size: 18px;
             font-weight: bold;
-            font-size: 15px;
-            margin-bottom: 5px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            margin: 0 0 5px 0;
         }
-        .anime-genre {
-            font-size: 12px;
-            color: #777;
-            margin-bottom: 10px;
+        .anime-cat {
+            color: #888;
+            font-size: 13px;
+            margin-bottom: 15px;
         }
-        .episodes-container {
+        .episodes-list {
             display: flex;
             flex-wrap: wrap;
-            gap: 5px;
+            gap: 8px;
             margin-top: auto;
-            max-height: 80px;
-            overflow-y: auto;
         }
-        .ep-link {
-            background: #222;
-            color: #eee;
-            font-size: 11px;
-            padding: 4px 8px;
-            border-radius: 3px;
+        .ep-btn {
+            background: #2a2a2a;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 4px;
             text-decoration: none;
+            font-size: 13px;
+            border: 1px solid #444;
+            transition: 0.2s;
         }
-        .ep-link:hover {
+        .ep-btn:hover {
             background: #e50914;
-            color: white;
+            border-color: #e50914;
         }
         #error-msg {
             color: #ff5555;
-            background: #2a1111;
+            background: #331111;
             padding: 10px;
             border-radius: 4px;
             margin-bottom: 15px;
-            display: none;
-            font-family: monospace;
             white-space: pre-wrap;
+            font-family: monospace;
+            display: none;
         }
     </style>
 </head>
@@ -236,80 +175,72 @@
 
 <div class="container">
     <header>
-        <div class="logo">
-            S4MURAI
-            <span>PLAYER</span>
-        </div>
-        <div class="header-right">
-            <a href="https://discord.com" target="_blank" class="discord-btn">DISCORD</a>
-            <button class="admin-toggle-btn" onclick="toggleAdminPanel()">Panel Admina</button>
-        </div>
+        <h1>S4muraiPlayer</h1>
+        <button class="dev-btn" onclick="toggleDevPanel()">Dev Panel</button>
     </header>
 
     <div id="error-msg"></div>
 
-    <!-- PANEL ADMINA (Zabezpieczony hasłem) -->
-    <div id="admin-panel">
-        <h2 style="margin-top:0; color:#fff;">Panel Zarządzania S4muraiPlayer</h2>
+    <!-- PANEL ADMINISTRATORA (DEV) -->
+    <div id="dev-panel">
+        <h2>Panel Zarządzania (Dev)</h2>
         
-        <!-- 1. Dodawanie serialu -->
+        <!-- 1. Dodawanie nowego serialu -->
         <div class="admin-section">
-            <h3>1. Dodaj Nowy Serial Anime</h3>
-            <input type="text" id="add-title" placeholder="Tytuł anime...">
-            <select id="add-category">
+            <h3>Dodaj Nowy Serial</h3>
+            <input type="text" id="new-anime-title" placeholder="Tytuł serialu (np. Solo Leveling)">
+            <select id="new-anime-category">
                 <option value="Akcja">Akcja</option>
                 <option value="Romans">Romans</option>
                 <option value="Fantasy">Fantasy</option>
                 <option value="Inne">Inne</option>
             </select>
-            <input type="text" id="add-image" placeholder="Link do okładki (URL obrazka)...">
-            <button class="submit-btn" onclick="createNewAnime()">Utwórz Serial</button>
+            <input type="text" id="new-anime-image" placeholder="Link do okładki (URL obrazka)">
+            <button class="action-btn" onclick="addAnimeShow()">Utwórz Serial</button>
         </div>
 
-        <!-- 2. Dodawanie odcinka -->
+        <!-- 2. Dodawanie odcinka do serialu -->
         <div class="admin-section">
-            <h3>2. Dodaj Odcinek do Serialu</h3>
+            <h3>Dodaj Odcinek do Serialu</h3>
             <select id="ep-anime-select">
                 <option value="">Wybierz serial...</option>
             </select>
-            <input type="text" id="ep-title" placeholder="Nazwa/Numer odcinka (np. Odcinek 1)">
-            <input type="text" id="ep-link" placeholder="Link do odtwarzacza / wideo...">
-            <button class="submit-btn" onclick="addNewEpisode()">Dodaj Odcinek</button>
+            <input type="text" id="ep-number" placeholder="Numer lub nazwa odcinka (np. Odcinek 1)">
+            <input type="text" id="ep-link" placeholder="Link do odtwarzacza / wideo">
+            <button class="action-btn" onclick="addEpisode()">Dodaj Odcinek</button>
         </div>
 
-        <!-- 3. Edycja serialu (Nazwa, okładka, kategoria) -->
+        <!-- 3. Edycja nazwy / okładki / kategorii serialu -->
         <div class="admin-section">
-            <h3>3. Edytuj Istniejący Serial (Nazwa, Okładka, Kategoria)</h3>
-            <select id="edit-anime-select" onchange="loadEditForm()">
+            <h3>Edytuj Istniejący Serial</h3>
+            <select id="edit-anime-select" onchange="loadEditData()">
                 <option value="">Wybierz serial do edycji...</option>
             </select>
-            <input type="text" id="edit-title" placeholder="Nowy tytuł...">
-            <select id="edit-category">
+            <input type="text" id="edit-anime-title" placeholder="Nowy tytuł">
+            <select id="edit-anime-category">
                 <option value="Akcja">Akcja</option>
                 <option value="Romans">Romans</option>
                 <option value="Fantasy">Fantasy</option>
                 <option value="Inne">Inne</option>
             </select>
-            <input type="text" id="edit-image" placeholder="Nowy link do okładki...">
-            <button class="submit-btn" onclick="updateAnimeData()">Zapisz Zmiany</button>
+            <input type="text" id="edit-anime-image" placeholder="Nowy link do okładki">
+            <button class="action-btn" onclick="updateAnimeShow()">Zapisz Zmiany</button>
         </div>
     </div>
 
-    <!-- Wyszukiwarka -->
-    <input type="text" id="search-input" class="search-bar" placeholder="SZUKAJ W KATALOGU..." oninput="filterCatalog()">
-
-    <!-- Kategorie -->
-    <div class="categories">
-        <button class="cat-btn active" onclick="setCategory('Wszystkie', this)">Wszystkie</button>
-        <button class="cat-btn" onclick="setCategory('Akcja', this)">Akcja</button>
-        <button class="cat-btn" onclick="setCategory('Romans', this)">Romans</button>
-        <button class="cat-btn" onclick="setCategory('Fantasy', this)">Fantasy</button>
-        <button class="cat-btn" onclick="setCategory('Inne', this)">Inne</button>
+    <!-- Pasek Kategorii -->
+    <div class="categories-bar">
+        <button class="cat-chip active" onclick="filterCategory('Wszystkie', this)">Wszystkie</button>
+        <button class="cat-chip" onclick="filterCategory('Akcja', this)">Akcja</button>
+        <button class="cat-chip" onclick="filterCategory('Romans', this)">Romans</button>
+        <button class="cat-chip" onclick="filterCategory('Fantasy', this)">Fantasy</button>
+        <button class="cat-chip" onclick="filterCategory('Inne', this)">Inne</button>
     </div>
 
-    <!-- Katalog -->
-    <div class="catalog-title">KATALOG SERII ANIME</div>
-    <div id="anime-grid" class="anime-grid">Ładowanie bazy danych...</div>
+    <!-- Katalog Anime -->
+    <div>
+        <div id="anime-grid" class="anime-grid">Ładowanie katalogu...</div>
+    </div>
 </div>
 
 <script>
@@ -317,30 +248,29 @@
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRteGpjZ3JpcXhzeGNzdnhpaGVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkyOTA1MzAsImV4cCI6MjEwNDg2NjUzMH0.nFoD44in459L7M5mUxSXcojWGP89PbGdhRrTAz8ZbfI';
     
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    let animeList = [];
-    let activeCategory = 'Wszystkie';
+    let allAnimeData = [];
+    let currentCategory = 'Wszystkie';
 
-    // Pokazywanie/ukrywanie panelu admina na hasło
-    function toggleAdminPanel() {
-        const panel = document.getElementById('admin-panel');
+    function toggleDevPanel() {
+        const panel = document.getElementById('dev-panel');
         if (panel.style.display === 'block') {
             panel.style.display = 'none';
         } else {
             const pass = prompt('Podaj hasło administratora:');
             if (pass === 'Korneliusz1111') {
                 panel.style.display = 'block';
-                populateDropdowns();
+                populateSelects();
             } else if (pass !== null) {
                 alert('Błędne hasło!');
             }
         }
     }
 
-    // Pobieranie danych z Supabase
-    async function fetchAnimeData() {
-        const errDiv = document.getElementById('error-msg');
-        errDiv.style.display = 'none';
-
+    async function fetchAnime() {
+        const errorDiv = document.getElementById('error-msg');
+        const gridDiv = document.getElementById('anime-grid');
+        errorDiv.style.display = 'none';
+        
         try {
             const { data, error } = await supabaseClient
                 .from('S4muraiPlayer')
@@ -348,96 +278,91 @@
 
             if (error) throw error;
 
-            animeList = data || [];
-            renderCatalog();
-            populateDropdowns();
+            allAnimeData = data || [];
+            renderAnime();
+            populateSelects();
+
         } catch (err) {
             console.error(err);
-            errDiv.style.display = 'block';
-            errDiv.textContent = 'Błąd pobierania bazy danych:\n' + JSON.stringify(err, null, 2);
+            errorDiv.style.display = 'block';
+            errorDiv.textContent = 'Błąd pobierania danych:\n' + (err.message || JSON.stringify(err, null, 2)) + '\n\nWskazówka: Uruchom plik przez serwer lokalny (np. Live Server w VS Code) zamiast otwierać go bezpośrednio z dysku.';
+            gridDiv.innerHTML = '';
         }
     }
 
-    // Rysowanie katalogu
-    function renderCatalog() {
-        const grid = document.getElementById('anime-grid');
-        const searchTerm = document.getElementById('search-input').value.toLowerCase();
+    function filterCategory(cat, element) {
+        currentCategory = cat;
+        document.querySelectorAll('.cat-chip').forEach(btn => btn.classList.remove('active'));
+        element.classList.add('active');
+        renderAnime();
+    }
 
-        let filtered = animeList.filter(anime => {
-            const matchesCat = (activeCategory === 'Wszystkie' || anime.category === activeCategory);
-            const matchesSearch = anime.title && anime.title.toLowerCase().includes(searchTerm);
-            return matchesCat && matchesSearch;
-        });
+    function renderAnime() {
+        const gridDiv = document.getElementById('anime-grid');
+        
+        const filtered = currentCategory === 'Wszystkie' 
+            ? allAnimeData 
+            : allAnimeData.filter(a => a.category === currentCategory);
 
         if (filtered.length === 0) {
-            grid.innerHTML = '<p style="color: #666;">Brak pozycji w bazie.</p>';
+            gridDiv.innerHTML = '<p style="color: #888;">Brak seriali w tej kategorii.</p>';
             return;
         }
 
         let html = '';
         filtered.forEach(anime => {
-            let episodes = [];
+            let eps = [];
             try {
-                episodes = typeof anime.episodes === 'string' ? JSON.parse(anime.episodes) : (anime.episodes || []);
-            } catch(e) { episodes = []; }
+                eps = typeof anime.episodes === 'string' ? JSON.parse(anime.episodes) : (anime.episodes || []);
+            } catch(e) {
+                eps = [];
+            }
 
-            let epsHtml = '';
-            if (episodes.length === 0) {
-                epsHtml = '<span style="color:#555; font-size:11px;">Brak odcinków</span>';
+            let episodesHtml = '';
+            if (eps.length === 0) {
+                episodesHtml = '<span style="color: #666; font-size: 13px;">Brak odcinków</span>';
             } else {
-                episodes.forEach(ep => {
-                    epsHtml += `<a href="${ep.link}" target="_blank" class="ep-link">${ep.title}</a>`;
+                eps.forEach(ep => {
+                    episodesHtml += `<a href="${ep.link}" target="_blank" class="ep-btn">${ep.title}</a>`;
                 });
             }
 
             html += `
                 <div class="anime-card">
-                    <img src="${anime.image || 'https://via.placeholder.com/200x280?text=Brak+Okładki'}" alt="Okładka">
+                    <img src="${anime.image || 'https://via.placeholder.com/280x350?text=Brak+Okladki'}" alt="Okładka">
                     <div class="anime-info">
-                        <div class="anime-name" title="${anime.title}">${anime.title}</div>
-                        <div class="anime-genre">${anime.category || 'Inne'}</div>
-                        <div class="episodes-container">
-                            ${epsHtml}
+                        <div class="anime-title">${anime.title}</div>
+                        <div class="anime-cat">Kategoria: ${anime.category || 'Inne'}</div>
+                        <div class="episodes-list">
+                            ${episodesHtml}
                         </div>
                     </div>
                 </div>
             `;
         });
-        grid.innerHTML = html;
+        gridDiv.innerHTML = html;
     }
 
-    function setCategory(cat, btn) {
-        activeCategory = cat;
-        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        renderCatalog();
-    }
-
-    function filterCatalog() {
-        renderCatalog();
-    }
-
-    function populateDropdowns() {
+    function populateSelects() {
         const epSelect = document.getElementById('ep-anime-select');
         const editSelect = document.getElementById('edit-anime-select');
-
+        
         let options = '<option value="">Wybierz serial...</option>';
-        animeList.forEach(anime => {
+        allAnimeData.forEach(anime => {
             options += `<option value="${anime.id}">${anime.title}</option>`;
         });
-
+        
         epSelect.innerHTML = options;
         editSelect.innerHTML = options;
     }
 
-    // 1. Dodawanie nowego serialu
-    async function createNewAnime() {
-        const title = document.getElementById('add-title').value;
-        const category = document.getElementById('add-category').value;
-        const image = document.getElementById('add-image').value;
+    async function addAnimeShow() {
+        const title = document.getElementById('new-anime-title').value;
+        const category = document.getElementById('new-anime-category').value;
+        const image = document.getElementById('new-anime-image').value;
 
         if (!title) {
-            alert('Wpisz tytuł serialu!');
+            alert('Wprowadź tytuł serialu!');
             return;
         }
 
@@ -449,16 +374,15 @@
             alert('Błąd: ' + error.message);
         } else {
             alert('Serial dodany pomyślnie!');
-            document.getElementById('add-title').value = '';
-            document.getElementById('add-image').value = '';
-            fetchAnimeData();
+            document.getElementById('new-anime-title').value = '';
+            document.getElementById('new-anime-image').value = '';
+            fetchAnime();
         }
     }
 
-    // 2. Dodawanie odcinka do wybranego serialu
-    async function addNewEpisode() {
+    async function addEpisode() {
         const animeId = document.getElementById('ep-anime-select').value;
-        const epTitle = document.getElementById('ep-title').value;
+        const epTitle = document.getElementById('ep-number').value;
         const epLink = document.getElementById('ep-link').value;
 
         if (!animeId || !epTitle || !epLink) {
@@ -466,7 +390,7 @@
             return;
         }
 
-        const animeObj = animeList.find(a => a.id == animeId);
+        const animeObj = allAnimeData.find(a => a.id == animeId);
         if (!animeObj) return;
 
         let eps = [];
@@ -485,34 +409,32 @@
             alert('Błąd dodawania odcinka: ' + error.message);
         } else {
             alert('Odcinek dodany pomyślnie!');
-            document.getElementById('ep-title').value = '';
+            document.getElementById('ep-number').value = '';
             document.getElementById('ep-link').value = '';
-            fetchAnimeData();
+            fetchAnime();
         }
     }
 
-    // Ładowanie danych do formularza edycji
-    function loadEditForm() {
+    function loadEditData() {
         const animeId = document.getElementById('edit-anime-select').value;
         if (!animeId) {
-            document.getElementById('edit-title').value = '';
-            document.getElementById('edit-image').value = '';
+            document.getElementById('edit-anime-title').value = '';
+            document.getElementById('edit-anime-image').value = '';
             return;
         }
-        const animeObj = animeList.find(a => a.id == animeId);
+        const animeObj = allAnimeData.find(a => a.id == animeId);
         if (animeObj) {
-            document.getElementById('edit-title').value = animeObj.title || '';
-            document.getElementById('edit-image').value = animeObj.image || '';
-            document.getElementById('edit-category').value = animeObj.category || 'Inne';
+            document.getElementById('edit-anime-title').value = animeObj.title || '';
+            document.getElementById('edit-anime-image').value = animeObj.image || '';
+            document.getElementById('edit-anime-category').value = animeObj.category || 'Inne';
         }
     }
 
-    // 3. Edycja serialu
-    async function updateAnimeData() {
+    async function updateAnimeShow() {
         const animeId = document.getElementById('edit-anime-select').value;
-        const newTitle = document.getElementById('edit-title').value;
-        const newCategory = document.getElementById('edit-category').value;
-        const newImage = document.getElementById('edit-image').value;
+        const newTitle = document.getElementById('edit-anime-title').value;
+        const newImage = document.getElementById('edit-anime-image').value;
+        const newCat = document.getElementById('edit-anime-category').value;
 
         if (!animeId || !newTitle) {
             alert('Wybierz serial i podaj tytuł!');
@@ -521,19 +443,18 @@
 
         const { error } = await supabaseClient
             .from('S4muraiPlayer')
-            .update({ title: newTitle, category: newCategory, image: newImage })
+            .update({ title: newTitle, image: newImage, category: newCat })
             .eq('id', animeId);
 
         if (error) {
             alert('Błąd edycji: ' + error.message);
         } else {
-            alert('Zaktualizowano pomyślnie!');
-            fetchAnimeData();
+            alert('Serial zaktualizowany pomyślnie!');
+            fetchAnime();
         }
     }
 
-    // Start
-    fetchAnimeData();
+    fetchAnime();
 </script>
 
 </body>
