@@ -523,9 +523,11 @@
             let html = '';
             filtered.forEach(anime => {
                 let eps = parseEpisodes(anime.episodes);
+                // Używamy tytułu jako unikalnego identyfikatora jako bezpiecznika
+                const cardIdentifier = anime.title;
 
                 html += `
-                    <div class="anime-card" onclick="openPlayer('${anime.id}')">
+                    <div class="anime-card" onclick="openPlayerByTitle('${CSS.escape(cardIdentifier)}')">
                         <img src="${anime.image || 'https://via.placeholder.com/240x330?text=Brak+Okladki'}" alt="Okładka">
                         <div class="anime-info">
                             <div class="anime-title">${anime.title}</div>
@@ -550,8 +552,8 @@
             return [];
         }
 
-        function openPlayer(animeId) {
-            const anime = allAnimeData.find(a => a.id == animeId);
+        function openPlayerByTitle(title) {
+            const anime = allAnimeData.find(a => a.title === title);
             if (!anime) return;
 
             const catalogView = document.getElementById('catalog-view');
@@ -617,7 +619,8 @@
             
             let options = '<option value="">Wybierz serial...</option>';
             allAnimeData.forEach(anime => {
-                options += `<option value="${anime.id}">${anime.title}</option>`;
+                // Używamy tytułu jako wartości w select, żeby całkowicie ominąć brak kolumny id
+                options += `<option value="${anime.title}">${anime.title}</option>`;
             });
             
             if(epSelect) epSelect.innerHTML = options;
@@ -650,42 +653,42 @@
         }
 
         async function addEpisode() {
-            const animeId = document.getElementById('ep-anime-select').value;
+            const animeTitle = document.getElementById('ep-anime-select').value;
             const epTitle = document.getElementById('ep-number').value;
             const epLink = document.getElementById('ep-link').value;
 
-            if (!animeId || !epTitle || !epLink) {
+            if (!animeTitle || !epTitle || !epLink) {
                 alert('Wypełnij wszystkie pola odcinka!');
                 return;
             }
 
-            await saveEpisodeDirectly(animeId, epTitle, epLink);
+            await saveEpisodeByTitle(animeTitle, epTitle, epLink);
             document.getElementById('ep-number').value = '';
             document.getElementById('ep-link').value = '';
         }
 
         async function suggestEpisode() {
-            const animeId = document.getElementById('suggest-anime-select').value;
+            const animeTitle = document.getElementById('suggest-anime-select').value;
             const epTitle = document.getElementById('suggest-ep-title').value;
             const epLink = document.getElementById('suggest-ep-link').value;
 
-            if (!animeId || !epTitle || !epLink) {
+            if (!animeTitle || !epTitle || !epLink) {
                 alert('Musisz wybrać serial, podać nazwę odcinka ORAZ dołączyć link do odtwarzacza!');
                 return;
             }
 
-            await saveEpisodeDirectly(animeId, epTitle, epLink);
+            await saveEpisodeByTitle(animeTitle, epTitle, epLink);
             document.getElementById('suggest-ep-title').value = '';
             document.getElementById('suggest-ep-link').value = '';
         }
 
-        // Pobiera bezpośrednio aktualne dane z bazy przed dodaniem, zapobiegając błędom pamięci
-        async function saveEpisodeDirectly(animeId, epTitle, epLink) {
+        // Zapisuje odcinek bazując na nazwie serialu (eq('title', animeTitle)), co omija problem z brakującą kolumną id
+        async function saveEpisodeByTitle(animeTitle, epTitle, epLink) {
             try {
                 const { data: freshData, error: fetchError } = await supabaseClient
                     .from('S4muraiPlayer')
                     .select('episodes')
-                    .eq('id', animeId)
+                    .eq('title', animeTitle)
                     .single();
 
                 if (fetchError) throw fetchError;
@@ -696,7 +699,7 @@
                 const { error: updateError } = await supabaseClient
                     .from('S4muraiPlayer')
                     .update({ episodes: eps })
-                    .eq('id', animeId);
+                    .eq('title', animeTitle);
 
                 if (updateError) throw updateError;
 
@@ -707,14 +710,14 @@
         }
 
         function loadEditData() {
-            const animeId = document.getElementById('edit-anime-select').value;
-            if (!animeId) {
+            const animeTitle = document.getElementById('edit-anime-select').value;
+            if (!animeTitle) {
                 document.getElementById('edit-anime-title').value = '';
                 document.getElementById('edit-anime-image').value = '';
                 document.getElementById('edit-anime-category').value = '';
                 return;
             }
-            const animeObj = allAnimeData.find(a => a.id == animeId);
+            const animeObj = allAnimeData.find(a => a.title === animeTitle);
             if (animeObj) {
                 document.getElementById('edit-anime-title').value = animeObj.title || '';
                 document.getElementById('edit-anime-image').value = animeObj.image || '';
@@ -723,12 +726,12 @@
         }
 
         async function updateAnimeShow() {
-            const targetId = document.getElementById('edit-anime-select').value;
+            const oldTitle = document.getElementById('edit-anime-select').value;
             const newTitle = document.getElementById('edit-anime-title').value;
             const newImage = document.getElementById('edit-anime-image').value;
             const newCat = document.getElementById('edit-anime-category').value;
 
-            if (!targetId || !newTitle) {
+            if (!oldTitle || !newTitle) {
                 alert('Wybierz serial i podaj tytuł!');
                 return;
             }
@@ -736,7 +739,7 @@
             const { error } = await supabaseClient
                 .from('S4muraiPlayer')
                 .update({ title: newTitle, image: newImage, category: newCat })
-                .eq('id', targetId);
+                .eq('title', oldTitle);
 
             if (error) {
                 alert('Błąd edycji: ' + error.message);
