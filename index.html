@@ -4,450 +4,130 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>S4murai Player</title>
+    <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        :root {
+            --bg-color: #0b0b0e;
+            --panel-bg: #141419;
+            --accent: #ff0033;
+            --accent-hover: #ff2a55;
+            --text-main: #f0f0f5;
+            --text-muted: #8b8b9e;
+            --border: #22222d;
         }
 
         body {
-            background-color: #0b0b0e;
-            color: #ffffff;
-            padding: 20px;
-            background-image: linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px);
-            background-size: 40px 40px;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
         header {
+            background: var(--panel-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #ff0033;
-            padding-bottom: 15px;
-            flex-wrap: wrap;
-            gap: 15px;
-            position: relative;
-        }
-
-        header::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 150px;
-            height: 2px;
-            background-color: #ff0033;
-            box-shadow: 0 0 10px #ff0033;
-        }
-
-        .logo-container {
-            display: flex;
-            flex-direction: column;
         }
 
         .logo {
-            color: #ffffff;
-            font-size: 28px;
-            font-weight: 900;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            font-style: italic;
-        }
-
-        .logo-sub {
-            color: #ff0033;
-            font-size: 20px;
-            font-weight: 900;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            font-style: italic;
-            margin-top: -5px;
-        }
-
-        .header-center {
-            flex-grow: 1;
-            max-width: 500px;
-            margin: 0 20px;
-        }
-
-        .search-box input {
-            width: 100%;
-            background-color: #121218;
-            border: 1px solid #22222e;
-            padding: 12px 18px;
-            border-radius: 4px;
-            color: white;
-            font-size: 14px;
-            letter-spacing: 1px;
-        }
-
-        .search-box input:focus {
-            outline: none;
-            border-color: #ff0033;
-        }
-
-        .header-right {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .discord-btn {
-            background-color: #5865F2;
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            font-size: 14px;
+            font-size: 24px;
             font-weight: bold;
-            letter-spacing: 1px;
-            transition: 0.2s;
-            box-shadow: 0 4px 10px rgba(88, 101, 242, 0.3);
-        }
-
-        .discord-btn:hover {
-            background-color: #4752C4;
-        }
-
-        .dev-btn {
-            background-color: #ff0033;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 900;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            transition: 0.2s;
-            box-shadow: 0 4px 15px rgba(255, 0, 51, 0.4);
-        }
-
-        .dev-btn:hover {
-            background-color: #cc0029;
-        }
-
-        .danger-btn {
-            background-color: #881122;
-        }
-        .danger-btn:hover {
-            background-color: #aa1122;
-        }
-
-        /* HERO BANER */
-        .hero-banner {
-            background: linear-gradient(135deg, #1a080c 0%, #121218 100%);
-            border: 1px solid #2d1218;
-            border-left: 5px solid #ff0033;
-            border-radius: 4px;
-            padding: 35px;
-            margin-bottom: 35px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-banner::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 30px;
-            height: 30px;
-            background: #ff0033;
-            clip-path: polygon(100% 0, 0 100%, 100% 100%);
-        }
-
-        .hero-title {
-            font-size: 32px;
-            font-weight: 900;
-            letter-spacing: 1.5px;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-        }
-
-        .hero-desc {
-            color: #b3b3c1;
-            font-size: 15px;
-            line-height: 1.6;
-            max-width: 800px;
-            margin-bottom: 25px;
-        }
-
-        .hero-btn {
-            background-color: #ff0033;
-            color: white;
-            border: none;
-            padding: 12px 28px;
-            font-weight: 900;
-            font-size: 14px;
-            text-transform: uppercase;
+            color: var(--accent);
             letter-spacing: 1px;
             cursor: pointer;
-            border-radius: 2px;
-            display: inline-block;
-            box-shadow: 0 4px 15px rgba(255, 0, 51, 0.4);
-            transition: 0.2s;
-            text-decoration: none;
         }
 
-        .hero-btn:hover {
-            background-color: #cc0029;
-            transform: translateY(-2px);
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
         }
 
-        /* SEKCJA PROPOZYCJI */
-        .suggest-section {
-            background-color: #121218;
-            border: 1px solid #22222e;
-            border-radius: 4px;
-            padding: 25px;
-            margin-bottom: 40px;
-        }
+        .hidden { display: none !important; }
+        .visible { display: block !important; }
 
-        .suggest-title {
-            font-size: 20px;
-            font-weight: 900;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-        }
-
-        .suggest-subtitle {
-            color: #888899;
-            font-size: 13px;
-            margin-bottom: 20px;
-        }
-
-        .form-row {
+        /* Style Katalogu */
+        .catalog-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .form-field {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .form-field label {
-            font-size: 11px;
-            color: #777788;
-            font-weight: bold;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .form-field input, .form-field select, .form-field textarea {
-            background-color: #0b0b0e;
-            border: 1px solid #22222e;
-            padding: 10px 14px;
-            border-radius: 4px;
-            color: white;
-            font-size: 13px;
-        }
-
-        .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
-            outline: none;
-            border-color: #ff0033;
-        }
-
-        .full-width {
-            grid-column: span 2;
-        }
-
-        .catalog-header {
-            font-size: 22px;
-            font-weight: 900;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            margin-bottom: 25px;
-            border-left: 4px solid #ff0033;
-            padding-left: 12px;
-        }
-
-        .categories {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-            overflow-x: auto;
-            padding-bottom: 5px;
-        }
-
-        .cat-chip {
-            background-color: #121218;
-            border: 1px solid #22222e;
-            color: #aaa;
-            padding: 8px 18px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: bold;
-            transition: 0.2s;
-            text-transform: uppercase;
-        }
-
-        .cat-chip:hover, .cat-chip.active {
-            background-color: #ff0033;
-            border-color: #ff0033;
-            color: white;
-            box-shadow: 0 0 10px rgba(255, 0, 51, 0.3);
-        }
-
-        .anime-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 20px;
+            margin-top: 20px;
         }
 
         .anime-card {
-            background-color: #121218;
-            border-radius: 4px;
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
             overflow: hidden;
-            border: 1px solid #22222e;
-            display: flex;
-            flex-direction: column;
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: transform 0.2s, border-color 0.2s;
             position: relative;
         }
 
         .anime-card:hover {
-            border-color: #ff0033;
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(255, 0, 51, 0.25);
-        }
-
-        .anime-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: rgba(0, 0, 0, 0.75);
-            border: 1px solid #333;
-            padding: 3px 8px;
-            border-radius: 3px;
-            font-size: 11px;
-            font-weight: bold;
-            color: #ffd700;
-            display: flex;
-            align-items: center;
-            gap: 3px;
+            border-color: var(--accent);
         }
 
         .anime-card img {
             width: 100%;
-            height: 290px;
+            height: 280px;
             object-fit: cover;
         }
 
         .anime-info {
             padding: 12px;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
         }
 
         .anime-title {
-            font-size: 15px;
             font-weight: bold;
-            margin-bottom: 4px;
+            font-size: 16px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
         .anime-cat {
-            font-size: 11px;
-            color: #ff0033;
-            text-transform: uppercase;
-            font-weight: bold;
-            letter-spacing: 0.5px;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
         }
 
-        .view-section {
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-
-        .hidden {
-            display: none !important;
-            opacity: 0;
-            transform: scale(0.98);
-        }
-
-        .visible {
-            display: block !important;
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        .series-header-title {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            border-left: 4px solid #ff0033;
-            padding-left: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .series-meta-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            background: #121218;
-            padding: 12px 20px;
-            border: 1px solid #22222e;
+        .anime-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            color: #ffd700;
+            padding: 4px 8px;
             border-radius: 4px;
-        }
-
-        .rating-box {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: bold;
-            color: #ffd700;
         }
 
-        .star-btn {
-            background: none;
-            border: none;
-            color: #555;
-            cursor: pointer;
-            font-size: 18px;
-            transition: 0.2s;
-        }
-        .star-btn:hover, .star-btn.active {
-            color: #ffd700;
-        }
-
+        /* Style Odtwarzacza */
         .player-container {
-            background-color: #121218;
-            border: 1px solid #22222e;
-            border-radius: 4px;
-            padding: 20px;
-            margin-bottom: 20px;
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 25px;
         }
 
-        .video-frame-wrap {
+        .video-wrapper {
             position: relative;
-            width: 100%;
-            padding-bottom: 56.25%;
+            padding-bottom: 56.25%; /* 16:9 */
             height: 0;
-            background-color: #000;
-            border-radius: 4px;
+            background: #000;
+            border-radius: 8px;
             overflow: hidden;
-            margin-bottom: 20px;
         }
 
-        .video-frame-wrap iframe {
+        .video-wrapper iframe {
             position: absolute;
             top: 0;
             left: 0;
@@ -459,461 +139,319 @@
         .episodes-bar {
             display: flex;
             gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 25px;
+            overflow-x: auto;
+            padding: 15px 0;
+            margin-top: 15px;
         }
 
         .ep-select-btn {
-            background-color: #1b1b24;
-            color: #ddd;
-            border: 1px solid #2d2d3d;
+            background: var(--bg-color);
+            border: 1px solid var(--border);
+            color: var(--text-main);
             padding: 8px 16px;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 13px;
-            font-weight: bold;
+            white-space: nowrap;
             transition: 0.2s;
         }
 
-        .ep-select-btn:hover, .ep-select-btn.active {
-            background-color: #ff0033;
-            border-color: #ff0033;
-            color: white;
+        .ep-select-btn.active, .ep-select-btn:hover {
+            background: var(--accent);
+            border-color: var(--accent);
         }
 
-        .back-btn {
-            background-color: #1b1b24;
-            color: #fff;
-            border: 1px solid #2d2d3d;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: bold;
-            transition: 0.2s;
+        /* Sekcja Ogłoszeń na Stronie Głównej */
+        .announcements-section {
+            margin-bottom: 30px;
         }
-
-        .back-btn:hover {
-            background-color: #2d2d3d;
-        }
-
-        /* SEKCJA KOMENTARZY */
-        .comments-section {
-            margin-top: 30px;
-            background-color: #121218;
-            border: 1px solid #22222e;
-            border-radius: 4px;
+        .announcement-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
             padding: 20px;
-        }
-
-        .comments-title {
-            font-size: 16px;
-            font-weight: bold;
+            border-radius: 8px;
             margin-bottom: 15px;
-            text-transform: uppercase;
-            color: #ff0033;
-            letter-spacing: 1px;
+        }
+        .announcement-card img {
+            max-width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            display: block;
         }
 
-        .comment-form {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 20px;
+        /* Formularze i Panel Admina */
+        .admin-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
         }
 
-        .comment-form input, .comment-form textarea {
-            background-color: #0b0b0e;
-            border: 1px solid #22222e;
+        input, select, textarea {
+            background: var(--bg-color);
+            border: 1px solid var(--border);
+            color: var(--text-main);
             padding: 10px;
-            border-radius: 4px;
-            color: white;
-            font-size: 13px;
+            border-radius: 6px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 5px;
+            margin-bottom: 15px;
         }
 
-        .comment-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        button.action-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        button.action-btn:hover {
+            background: var(--accent-hover);
         }
 
         .comment-item {
-            background-color: #0b0b0e;
-            border: 1px solid #22222e;
+            background: var(--bg-color);
+            border: 1px solid var(--border);
             padding: 12px;
-            border-radius: 4px;
+            border-radius: 6px;
+            margin-bottom: 10px;
         }
 
         .comment-author {
             font-weight: bold;
+            color: var(--accent);
             font-size: 13px;
-            color: #ff0033;
-            margin-bottom: 4px;
         }
 
         .comment-text {
-            font-size: 13px;
-            color: #ccc;
-        }
-
-        /* PANEL ADMINA */
-        #dev-panel {
-            display: none;
-            background-color: #121218;
-            border: 1px solid #ff0033;
-            padding: 25px;
-            border-radius: 4px;
-            margin-bottom: 30px;
-            box-shadow: 0 0 20px rgba(255, 0, 51, 0.15);
-        }
-
-        #dev-panel h2 {
-            color: #ff0033;
-            font-size: 18px;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .admin-section {
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #22222e;
-        }
-
-        .admin-section:last-child {
-            margin-bottom: 0;
-            padding-bottom: 0;
-            border-bottom: none;
-        }
-
-        .admin-section h3 {
-            font-size: 13px;
-            margin-bottom: 12px;
-            color: #888899;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .error-box {
-            background-color: #3d1a1a;
-            border: 1px solid #ff0033;
-            color: #ff9999;
-            padding: 15px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            white-space: pre-wrap;
-            display: none;
-        }
-
-        .admin-ep-list {
-            margin-top: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            max-height: 150px;
-            overflow-y: auto;
+            margin-top: 5px;
+            font-size: 14px;
         }
 
         .admin-ep-item {
+            background: var(--bg-color);
+            border: 1px solid var(--border);
+            padding: 8px 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #0b0b0e;
-            padding: 6px 10px;
+            margin-bottom: 5px;
             border-radius: 4px;
-            border: 1px solid #22222e;
-            font-size: 12px;
         }
 
         .small-del-btn {
-            background-color: #ff0033;
+            background: #dc3545;
             color: white;
             border: none;
-            padding: 3px 8px;
-            border-radius: 3px;
+            padding: 4px 8px;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 11px;
-            font-weight: bold;
-        }
-        .small-del-btn:hover {
-            background-color: #cc0029;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo-container">
-            <div class="logo">S4murai</div>
-            <div class="logo-sub">Player</div>
-        </div>
-        <div class="header-center">
-            <div class="search-box">
-                <input type="text" id="search-input" placeholder="SZUKAJ W KATALOGU..." oninput="filterAnime()">
-            </div>
-        </div>
-        <div class="header-right">
-            <a href="https://discord.gg/M6uy839mk" target="_blank" class="discord-btn">DISCORD</a>
-            <button class="dev-btn" onclick="toggleDevPanel()">PANEL ADMINA</button>
+        <div class="logo" onclick="closePlayer()">S4MURAI PLAYER</div>
+        <div>
+            <button class="action-btn" onclick="toggleAdminPanel()">Panel Admina</button>
         </div>
     </header>
 
-    <div id="error-box" class="error-box"></div>
+    <div class="container">
 
-    <!-- PANEL ADMINA -->
-    <div id="dev-panel">
-        <h2>Panel Zarządzania</h2>
-
-        <div class="admin-section">
-            <h3>Dodaj nowy serial</h3>
-            <div class="form-row">
-                <div class="form-field">
-                    <label>Tytuł serialu</label>
-                    <input type="text" id="new-anime-title" placeholder="np. Tytuł serii...">
-                </div>
-                <div class="form-field">
-                    <label>Kategoria</label>
-                    <input type="text" id="new-anime-category" placeholder="np. Akcja, Romans">
-                </div>
-                <div class="form-field full-width">
-                    <label>Link do okładki (URL)</label>
-                    <input type="text" id="new-anime-image" placeholder="https://...">
+        <!-- WIDOK KATALOGU -->
+        <div id="catalog-view" class="visible">
+            
+            <!-- Sekcja Ogłoszeń -->
+            <div class="announcements-section">
+                <h2>Ogłoszenia</h2>
+                <div id="announcements-container">
+                    <p style="color: var(--text-muted); font-size: 14px;">Ładowanie ogłoszeń...</p>
                 </div>
             </div>
-            <button class="dev-btn" onclick="addAnimeShow()" style="padding: 8px 16px; font-size: 13px;">Dodaj Serial</button>
-        </div>
 
-        <div class="admin-section">
-            <h3>Dodaj odcinek do serialu</h3>
-            <div class="form-row">
-                <div class="form-field">
-                    <label>Wybierz serial</label>
-                    <select id="ep-anime-select">
-                        <option value="">Wybierz serial...</option>
-                    </select>
-                </div>
-                <div class="form-field">
-                    <label>Nazwa / Numer odcinka</label>
-                    <input type="text" id="ep-number" placeholder="np. Odcinek 1">
-                </div>
-                <div class="form-field full-width">
-                    <label>Link do odtwarzacza lub YouTube</label>
-                    <input type="text" id="ep-link" placeholder="https://...">
-                </div>
+            <h2>Katalog Anime</h2>
+            <div style="margin: 15px 0;">
+                <input type="text" id="search-input" placeholder="Szukaj anime..." oninput="filterAnime()">
             </div>
-            <button class="dev-btn" onclick="addEpisode()" style="padding: 8px 16px; font-size: 13px;">Dodaj Odcinek</button>
+            <div id="anime-grid" class="catalog-grid">
+                <!-- Generowane dynamicznie -->
+            </div>
+
+            <!-- Panel Propozycji -->
+            <div style="margin-top: 40px; background: var(--panel-bg); padding: 20px; border-radius: 8px; border: 1px solid var(--border);">
+                <h3>Zaproponuj Anime / Odcinek</h3>
+                <input type="text" id="suggest-anime-title" placeholder="Tytuł anime">
+                <input type="text" id="suggest-anime-info" placeholder="Dodatkowe informacje (np. sezon, opcjonalny opis)">
+                <input type="text" id="suggest-ep-link" placeholder="Link do wideo">
+                <button class="action-btn" onclick="sendSuggestion()">Wyślij propozycję</button>
+                <div id="suggestions-list" style="margin-top: 15px;"></div>
+            </div>
         </div>
 
-        <div class="admin-section">
-            <h3>Edytuj / Usuń istniejący serial i jego odcinki</h3>
-            <div class="form-row">
-                <div class="form-field full-width">
-                    <label>Wybierz serial do edycji</label>
-                    <select id="edit-anime-select" onchange="loadEditData()">
-                        <option value="">Wybierz serial...</option>
-                    </select>
+        <!-- WIDOK ODTWARZACZA -->
+        <div id="player-view" class="hidden">
+            <button class="action-btn" onclick="closePlayer()" style="margin-bottom: 15px;">← Powrót do katalogu</button>
+            
+            <div class="player-container">
+                <h1 id="player-anime-title" style="margin-top: 0;">Tytuł Anime</h1>
+                <div style="margin-bottom: 15px; color: var(--text-muted);">
+                    Ocena: <span id="avg-rating-val" style="color: #ffd700; font-weight: bold;">0.0</span> / 10 
+                    <span style="margin-left: 15px;">Oceń:</span>
+                    <span style="cursor: pointer; color: #ffd700;" onclick="rateAnime(5)">★★★★★</span>
                 </div>
-                <div class="form-field">
-                    <label>Nowy tytuł</label>
-                    <input type="text" id="edit-anime-title" placeholder="Tytuł">
+
+                <div class="video-wrapper">
+                    <iframe id="main-video-iframe" src="" allowfullscreen></iframe>
                 </div>
-                <div class="form-field">
-                    <label>Nowa kategoria</label>
-                    <input type="text" id="edit-anime-category" placeholder="Kategoria">
+
+                <div id="episodes-bar" class="episodes-bar">
+                    <!-- Przyciski odcinków -->
                 </div>
-                <div class="form-field full-width">
-                    <label>Nowy link do okładki</label>
-                    <input type="text" id="edit-anime-image" placeholder="URL okładki">
-                </div>
-                
-                <div class="form-field full-width">
-                    <label>Zarządzaj odcinkami tego serialu:</label>
-                    <div id="admin-episodes-container" class="admin-ep-list">
-                        <span style="color: #666; font-size: 12px;">Wybierz serial powyżej, aby zobaczyć odcinki.</span>
+
+                <!-- Sekcja Komentarzy -->
+                <div style="margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px;">
+                    <h3>Komentarze</h3>
+                    <div style="margin-bottom: 15px;">
+                        <input type="text" id="comment-author" placeholder="Twój nick..." style="max-width: 200px; display: block; margin-bottom: 8px;">
+                        <textarea id="comment-text" placeholder="Napisz komentarz..." style="height: 60px;"></textarea>
+                        <button class="action-btn" onclick="addComment()">Dodaj komentarz</button>
+                    </div>
+                    <div id="comments-list">
+                        <!-- Komentarze -->
                     </div>
                 </div>
             </div>
-            <div style="display: flex; gap: 10px; margin-top: 10px;">
-                <button class="dev-btn" onclick="updateAnimeShow()" style="padding: 8px 16px; font-size: 13px;">Zapisz zmiany</button>
-                <button class="dev-btn danger-btn" onclick="deleteAnimeShow()" style="padding: 8px 16px; font-size: 13px;">Usuń Cały Serial</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- WIDOK KATALOGU -->
-    <div id="catalog-view" class="view-section visible">
-        
-        <div class="hero-banner">
-            <div class="hero-title">Alya Sometimes Hides Her Feelings in Russian</div>
-            <div class="hero-desc">
-                Słuchaj uważnie, bo Alisa Mihailovna Kujou ukrywa swoje prawdziwe myśli pod płaszczem chłodnego spojrzenia... i rosyjskich słów, które uważa za całkowicie niezrozumiałe.
-            </div>
-            <button class="hero-btn" onclick="openPlayerByTitle('Tokidoki Bosotto Russia-go de Dereru Tonari no Alya-san')">Oglądaj Teraz</button>
         </div>
 
-        <div class="suggest-section">
-            <div class="suggest-title">Brakuje odcinków? Zaproponuj Anime!</div>
-            <div class="suggest-subtitle">Masz w planach serię lub tytuł, którego brakuje w bazie? Podaj tytuł oraz link do wideo!</div>
+        <!-- PANEL ADMINISTRACYJNY -->
+        <div id="admin-panel" class="admin-panel hidden">
+            <h2>Panel Administratora</h2>
             
-            <div class="form-row">
-                <div class="form-field">
-                    <label>Tytuł anime:</label>
-                    <input type="text" id="suggest-anime-title" placeholder="np. Tytuł serii...">
+            <!-- Logowanie do panelu -->
+            <div id="admin-login-box">
+                <p>Wpisz hasło administratora, aby zarządzać treścią:</p>
+                <input type="password" id="admin-pass-input" placeholder="Hasło...">
+                <button class="action-btn" onclick="checkAdminPassword()">Zaloguj</button>
+            </div>
+
+            <!-- Zawartość panelu (ukryta dopóki brak poprawnego hasła) -->
+            <div id="admin-content" class="hidden">
+                <button class="small-del-btn" onclick="logoutAdmin()" style="margin-bottom: 20px;">Wyloguj admina</button>
+
+                <!-- ZARZĄDZANIE OGŁOSZENIAMI -->
+                <div style="background: var(--bg-color); padding: 15px; border-radius: 6px; border: 1px solid var(--border); margin-bottom: 25px;">
+                    <h3>Zarządzaj Ogłoszeniami</h3>
+                    <form id="announcement-form" onsubmit="handleSaveAnnouncement(event)">
+                        <input type="hidden" id="announcement-id">
+                        <label>Tytuł ogłoszenia:</label>
+                        <input type="text" id="announcement-title" required>
+                        <label>Opis:</label>
+                        <textarea id="announcement-description" required style="height: 80px;"></textarea>
+                        <label>Link do zdjęcia (URL):</label>
+                        <input type="url" id="announcement-image" placeholder="https://...">
+                        <button type="submit" class="action-btn">Zapisz ogłoszenie</button>
+                        <button type="button" onclick="resetAnnouncementForm()" class="action-btn" style="background: #6c757d; margin-left: 10px;">Anuluj edycję</button>
+                    </form>
+                    <div id="admin-announcements-list" style="margin-top: 15px;"></div>
                 </div>
-                <div class="form-field">
-                    <label>Rok / Studio / Uwagi:</label>
-                    <input type="text" id="suggest-anime-info" placeholder="np. 2025 / dodatkowe info">
+
+                <hr style="border-color: var(--border); margin: 25px 0;">
+
+                <h3>Dodaj nowe Anime</h3>
+                <input type="text" id="new-anime-title" placeholder="Tytuł serialu">
+                <input type="text" id="new-anime-category" placeholder="Kategoria (np. Action, Romance)">
+                <input type="text" id="new-anime-image" placeholder="Link do plakatów (URL obrazka)">
+                <button class="action-btn" onclick="addAnimeShow()">Dodaj serial</button>
+
+                <hr style="border-color: var(--border); margin: 25px 0;">
+
+                <h3>Dodaj Odcinek</h3>
+                <select id="ep-anime-select">
+                    <option value="">Wybierz serial...</option>
+                </select>
+                <input type="text" id="ep-number" placeholder="Nazwa/Numer odcinka (np. Odcinek 1)">
+                <input type="text" id="ep-link" placeholder="Link do wideo (np. embed iframe / link)">
+                <button class="action-btn" onclick="addEpisode()">Dodaj odcinek</button>
+
+                <hr style="border-color: var(--border); margin: 25px 0;">
+
+                <h3>Edytuj / Usuń Serial lub Odcinek</h3>
+                <select id="edit-anime-select" onchange="loadEditData()">
+                    <option value="">Wybierz serial do edycji...</option>
+                </select>
+                <div style="margin-top: 10px;">
+                    <label>Zmień tytuł:</label>
+                    <input type="text" id="edit-anime-title">
+                    <label>Zmień kategorię:</label>
+                    <input type="text" id="edit-anime-category">
+                    <label>Zmień miniaturkę (URL):</label>
+                    <input type="text" id="edit-anime-image">
+                    <button class="action-btn" onclick="updateAnimeShow()">Zapisz zmiany w serialu</button>
+                    <button class="small-del-btn" onclick="deleteAnimeShow()" style="margin-top: 10px; width: 100%; padding: 10px;">Usuń cały serial</button>
                 </div>
-                <div class="form-field full-width">
-                    <label>Link do playera / wideo:</label>
-                    <input type="text" id="suggest-ep-link" placeholder="https://... (link do odcinka)">
+                
+                <h4 style="margin-top: 20px;">Odcinki w wybranym serialu:</h4>
+                <div id="admin-episodes-container">
+                    <span style="color: var(--text-muted); font-size: 12px;">Wybierz serial powyżej, aby zobaczyć odcinki.</span>
                 </div>
             </div>
-            <button class="dev-btn" onclick="sendSuggestion()" style="padding: 10px 24px;">Wyślij Propozycję</button>
-            
-            <div style="margin-top: 20px; font-size: 12px; color: #777788; border-top: 1px solid #22222e; padding-top: 12px;">
-                <span style="font-weight: bold; text-transform: uppercase; color: #aaa;">Nadesłane propozcje:</span>
-                <div id="suggestions-list" style="margin-top: 6px; color: #888;">Brak nadesłanych propozycji.</div>
-            </div>
         </div>
 
-        <div class="categories" id="categories-container">
-            <div class="cat-chip active" onclick="filterCategory('Wszystkie', this)">Wszystkie</div>
-            <div class="cat-chip" onclick="filterCategory('Akcja', this)">Akcja</div>
-            <div class="cat-chip" onclick="filterCategory('Romans', this)">Romans</div>
-            <div class="cat-chip" onclick="filterCategory('Fantasy', this)">Fantasy</div>
-            <div class="cat-chip" onclick="filterCategory('Inne', this)">Inne</div>
-        </div>
-
-        <div class="catalog-header">Katalog wszystkich serii anime</div>
-
-        <div class="anime-grid" id="anime-grid"></div>
-    </div>
-
-    <!-- WIDOK ODTWARZACZA -->
-    <div id="player-view" class="view-section hidden">
-        <div class="series-header-title" id="player-series-title">Tytuł Serialu</div>
-        
-        <div class="series-meta-row">
-            <div class="rating-box" id="rating-container">
-                Ocena: <span id="avg-rating-val">9.1</span>/10 
-                <span style="margin-left: 15px;">Twoja ocena:</span>
-                <button class="star-btn" onclick="rateAnime(1)">★</button>
-                <button class="star-btn" onclick="rateAnime(2)">★</button>
-                <button class="star-btn" onclick="rateAnime(3)">★</button>
-                <button class="star-btn" onclick="rateAnime(4)">★</button>
-                <button class="star-btn" onclick="rateAnime(5)">★</button>
-            </div>
-        </div>
-
-        <div class="player-container">
-            <div class="video-frame-wrap">
-                <iframe id="main-video-iframe" src="" allowfullscreen></iframe>
-            </div>
-            <div class="episodes-bar" id="player-episodes-bar"></div>
-            
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
-                <button class="back-btn" onclick="closePlayer()">← Powrót do katalogu</button>
-            </div>
-        </div>
-
-        <!-- Sekcja Komentarzy -->
-        <div class="comments-section">
-            <div class="comments-title">Komentarze społeczności</div>
-            <div class="comment-form">
-                <input type="text" id="comment-author" placeholder="Twój nick...">
-                <textarea id="comment-text" placeholder="Napisz coś o tym serialu..." rows="2"></textarea>
-                <button class="dev-btn" onclick="addComment()" style="width: fit-content; padding: 6px 16px; font-size: 12px;">Dodaj komentarz</button>
-            </div>
-            <div class="comment-list" id="comments-list">
-                <span style="color: #666; font-size: 12px;">Brak komentarzy. Bądź pierwszy!</span>
-            </div>
-        </div>
     </div>
 
     <script>
-        const SUPABASE_URL = 'https://dmxjcgriqxsxcsvxihed.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRteGpjZ3JpcXhzeGNzdnhpaGVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkyOTA1MzAsImV4cCI6MjEwNDg2NjUzMH0.nFoD44in459L7M5mUxSXcojWGP89PbGdhRrTAz8ZbfI';
-        
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // Konfiguracja Supabase (uzupełnij swoimi danymi, jeśli były w oryginale)
+        const SUPABASE_URL = 'https://twoj-projekt.supabase.co';
+        const SUPABASE_KEY = 'twoj-klucz-anon';
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
         let allAnimeData = [];
-        let currentCategory = 'Wszystkie';
         let currentActiveAnime = null;
         let userSuggestions = [];
-
-        function toggleDevPanel() {
-            const panel = document.getElementById('dev-panel');
-            if (panel.style.display === 'block') {
-                panel.style.display = 'none';
-            } else {
-                const pass = prompt('Podaj hasło administratora:');
-                if (pass === 'Korneliusz1111') {
-                    panel.style.display = 'block';
-                    populateSelects();
-                } else if (pass !== null) {
-                    alert('Błędne hasło!');
-                }
-            }
-        }
+        let isAdminLoggedIn = false;
 
         async function fetchAnime() {
-            const errorDiv = document.getElementById('error-box');
-            const gridDiv = document.getElementById('anime-grid');
-            errorDiv.style.display = 'none';
-            
-            try {
-                const { data, error } = await supabaseClient
-                    .from('S4muraiPlayer')
-                    .select('*');
+            const { data, error } = await supabaseClient
+                .from('S4muraiPlayer')
+                .select('*');
 
-                if (error) throw error;
-
-                allAnimeData = data || [];
-                filterAnime();
-                populateSelects();
-                loadEditData();
-
-            } catch (err) {
-                console.error(err);
-                errorDiv.style.display = 'block';
-                errorDiv.textContent = 'Błąd pobierania danych:\n' + (err.message || JSON.stringify(err, null, 2));
-                gridDiv.innerHTML = '';
+            if (error) {
+                console.error('Błąd pobierania danych:', error);
+                return;
             }
+
+            allAnimeData = data || [];
+            renderAnimeGrid(allAnimeData);
+            populateSelects();
+            loadAnnouncements();
         }
 
-        function filterCategory(cat, element) {
-            currentCategory = cat;
-            document.querySelectorAll('.cat-chip').forEach(btn => btn.classList.remove('active'));
-            element.classList.add('active');
-            filterAnime();
-        }
-
-        function filterAnime() {
-            const searchInput = document.getElementById('search-input');
-            const searchText = searchInput ? searchInput.value.toLowerCase() : '';
+        function renderAnimeGrid(list) {
             const gridDiv = document.getElementById('anime-grid');
-            
-            const filtered = allAnimeData.filter(anime => {
-                const matchesCategory = currentCategory === 'Wszystkie' || anime.category === currentCategory;
-                const matchesSearch = anime.title && anime.title.toLowerCase().includes(searchText);
-                return matchesCategory && matchesSearch;
-            });
+            if (!gridDiv) return;
 
-            if (filtered.length === 0) {
-                gridDiv.innerHTML = '<p style="color: #888;">Brak seriali spełniających kryteria.</p>';
+            if (list.length === 0) {
+                gridDiv.innerHTML = '<p style="color: var(--text-muted);">Brak dostępnych anime w bazie.</p>';
                 return;
             }
 
             let html = '';
-            filtered.forEach(anime => {
+            list.forEach(anime => {
+                const rating = anime.rating_avg ? Number(anime.rating_avg).toFixed(1) : '9.1';
                 const cardIdentifier = anime.title;
-                const rating = anime.rating_avg ? anime.rating_avg.toFixed(1) : '9.1';
-
                 html += `
                     <div class="anime-card" onclick="openPlayerByTitle('${CSS.escape(cardIdentifier)}')">
                         <div class="anime-badge">★ ${rating}</div>
-                        <img src="${anime.image || 'https://via.placeholder.com/210x290?text=Brak+Okladki'}" alt="Okładka">
+                        <img src="${anime.image || 'https://via.placeholder.com/200x280?text=Brak+Zdjecia'}" alt="${anime.title}">
                         <div class="anime-info">
                             <div class="anime-title">${anime.title}</div>
                             <div class="anime-cat">${anime.category || 'Inne'}</div>
@@ -924,54 +462,50 @@
             gridDiv.innerHTML = html;
         }
 
+        function filterAnime() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const filtered = allAnimeData.filter(a => 
+                (a.title && a.title.toLowerCase().includes(query)) || 
+                (a.category && a.category.toLowerCase().includes(query))
+            );
+            renderAnimeGrid(filtered);
+        }
+
         function parseEpisodes(episodesField) {
             try {
-                if (Array.isArray(episodesField)) {
-                    return episodesField;
-                } else if (typeof episodesField === 'string' && episodesField.trim() !== '') {
-                    const parsed = JSON.parse(episodesField);
-                    if (Array.isArray(parsed)) return parsed;
-                }
+                if (Array.isArray(episodesField)) return episodesField;
+                if (typeof episodesField === 'string') return JSON.parse(episodesField);
             } catch(e) {}
             return [];
         }
 
-        function formatVideoLink(url) {
-            if (!url) return '';
-            // Automatyczne wsparcie dla linków YouTube wklejanych w panelu
-            if (url.includes('youtube.com/watch?v=')) {
-                const videoId = url.split('v=')[1]?.split('&')[0];
-                return `https://www.youtube.com/embed/${videoId}`;
-            } else if (url.includes('youtu.be/')) {
-                const videoId = url.split('youtu.be/')[1]?.split('?')[0];
-                return `https://www.youtube.com/embed/${videoId}`;
-            }
-            return url;
+        function formatVideoLink(link) {
+            return link;
         }
 
         function openPlayerByTitle(title) {
-            const anime = allAnimeData.find(a => a.title.toLowerCase() === title.toLowerCase());
+            const anime = allAnimeData.find(a => a.title === title);
             if (!anime) return;
-            currentActiveAnime = anime;
 
+            currentActiveAnime = anime;
             const catalogView = document.getElementById('catalog-view');
             const playerView = document.getElementById('player-view');
 
             catalogView.classList.remove('visible');
             catalogView.classList.add('hidden');
+            playerView.classList.remove('hidden');
+            playerView.classList.add('visible');
+
+            document.getElementById('player-anime-title').textContent = anime.title;
+            document.getElementById('avg-rating-val').textContent = anime.rating_avg ? Number(anime.rating_avg).toFixed(1) : '9.1';
 
             setTimeout(() => {
-                playerView.classList.remove('hidden');
-                playerView.classList.add('visible');
-                document.getElementById('player-series-title').textContent = anime.title;
-                document.getElementById('avg-rating-val').textContent = anime.rating_avg ? anime.rating_avg.toFixed(1) : '9.1';
-
-                const eps = parseEpisodes(anime.episodes);
-                const episodesBar = document.getElementById('player-episodes-bar');
+                const episodesBar = document.getElementById('episodes-bar');
                 const iframe = document.getElementById('main-video-iframe');
+                let eps = parseEpisodes(anime.episodes);
 
                 if (eps.length === 0) {
-                    episodesBar.innerHTML = '<span style="color: #888;">Brak dostępnych odcinków dla tego serialu.</span>';
+                    episodesBar.innerHTML = '<span style="color: var(--text-muted); font-size: 13px;">Brak dostępnych odcinków dla tego serialu.</span>';
                     iframe.src = '';
                 } else {
                     let buttonsHtml = '';
@@ -1015,9 +549,8 @@
         async function rateAnime(stars) {
             if (!currentActiveAnime) return;
             
-            // Proste symulowanie oceny w bazie (uśrednianie)
             let currentTotal = currentActiveAnime.rating_total || 9.1;
-            let newAvg = ((currentTotal + stars * 2) / 2); // skalowanie do 10
+            let newAvg = ((currentTotal + stars * 2) / 2);
             if (newAvg > 10) newAvg = 10;
 
             const { error } = await supabaseClient
@@ -1046,7 +579,7 @@
             const comments = parseComments(currentActiveAnime.comments);
 
             if (comments.length === 0) {
-                listDiv.innerHTML = '<span style="color: #666; font-size: 12px;">Brak komentarzy. Bądź pierwszy!</span>';
+                listDiv.innerHTML = '<span style="color: var(--text-muted); font-size: 12px;">Brak komentarzy. Bądź pierwszy!</span>';
                 return;
             }
 
@@ -1093,7 +626,7 @@
             const epSelect = document.getElementById('ep-anime-select');
             const editSelect = document.getElementById('edit-anime-select');
             
-            const currentSelectedEdit = editSelect.value;
+            const currentSelectedEdit = editSelect ? editSelect.value : '';
 
             let options = '<option value="">Wybierz serial...</option>';
             allAnimeData.forEach(anime => {
@@ -1178,7 +711,7 @@
                 document.getElementById('edit-anime-title').value = '';
                 document.getElementById('edit-anime-image').value = '';
                 document.getElementById('edit-anime-category').value = '';
-                if(epContainer) epContainer.innerHTML = '<span style="color: #666; font-size: 12px;">Wybierz serial powyżej, aby zobaczyć odcinki.</span>';
+                if(epContainer) epContainer.innerHTML = '<span style="color: var(--text-muted); font-size: 12px;">Wybierz serial powyżej, aby zobaczyć odcinki.</span>';
                 return;
             }
 
@@ -1190,7 +723,7 @@
 
                 let eps = parseEpisodes(animeObj.episodes);
                 if (eps.length === 0) {
-                    epContainer.innerHTML = '<span style="color: #888; font-size: 12px;">Brak odcinków w tym serialu.</span>';
+                    epContainer.innerHTML = '<span style="color: var(--text-muted); font-size: 12px;">Brak odcinków w tym serialu.</span>';
                 } else {
                     let epHtml = '';
                     eps.forEach((ep, index) => {
@@ -1293,7 +826,7 @@
             
             let listHtml = '';
             userSuggestions.forEach((s) => {
-                listHtml += `<div>• <b>${s.title}</b> (${s.info || 'brak dodatków'}) - <a href="${s.link}" target="_blank" style="color: #ff0033;">Link</a></div>`;
+                listHtml += `<div>• <b>${s.title}</b> (${s.info || 'brak dodatków'}) - <a href="${s.link}" target="_blank" style="color: var(--accent);">Link</a></div>`;
             });
             document.getElementById('suggestions-list').innerHTML = listHtml;
 
@@ -1303,6 +836,143 @@
             alert('Propozycja została wysłana!');
         }
 
+        // --- OBSŁUGA PANELU ADMINA I HASŁA ---
+        function toggleAdminPanel() {
+            const panel = document.getElementById('admin-panel');
+            panel.classList.toggle('hidden');
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
+        function checkAdminPassword() {
+            const pass = document.getElementById('admin-pass-input').value;
+            if (pass === 'Korneliusz1111') {
+                isAdminLoggedIn = true;
+                document.getElementById('admin-login-box').classList.add('hidden');
+                document.getElementById('admin-content').classList.remove('hidden');
+                loadAdminAnnouncements();
+            } else {
+                alert('Niepoprawne hasło!');
+            }
+        }
+
+        function logoutAdmin() {
+            isAdminLoggedIn = false;
+            document.getElementById('admin-pass-input').value = '';
+            document.getElementById('admin-content').classList.add('hidden');
+            document.getElementById('admin-login-box').classList.remove('hidden');
+        }
+
+        // --- MODUŁ OGŁOSZEŃ (Baza Supabase: tabela "announcements") ---
+        async function loadAnnouncements() {
+            const container = document.getElementById('announcements-container');
+            if (!container) return;
+
+            const { data, error } = await supabaseClient
+                .from('announcements')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error || !data || data.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted); font-size: 14px;">Brak aktualnych ogłoszeń.</p>';
+                return;
+            }
+
+            let html = '';
+            data.forEach(item => {
+                html += `
+                    <div class="announcement-card">
+                        ${item.image_url ? `<img src="${item.image_url}" alt="${item.title}">` : ''}
+                        <h3 style="margin-top: 0; color: var(--text-main);">${item.title}</h3>
+                        <p style="margin-bottom: 0; color: var(--text-muted); white-space: pre-wrap; font-size: 14px;">${item.description}</p>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        async function loadAdminAnnouncements() {
+            const listContainer = document.getElementById('admin-announcements-list');
+            if (!listContainer) return;
+
+            const { data, error } = await supabaseClient
+                .from('announcements')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error || !data || data.length === 0) {
+                listContainer.innerHTML = '<p style="color: var(--text-muted); font-size: 13px;">Brak ogłoszeń w bazie.</p>';
+                return;
+            }
+
+            let html = '<h4 style="margin-bottom: 10px;">Istniejące ogłoszenia:</h4>';
+            data.forEach(item => {
+                html += `
+                    <div style="background: var(--panel-bg); padding: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); border-radius: 4px;">
+                        <span style="font-size: 14px;"><strong>${item.title}</strong></span>
+                        <div>
+                            <button onclick='editAnnouncement(${JSON.stringify(item)})' class="action-btn" style="padding: 4px 10px; font-size: 12px; background: #ffc107; color: #000; margin-right: 5px;">Edytuj</button>
+                            <button onclick="deleteAnnouncement('${item.id}')" class="small-del-btn">Usuń</button>
+                        </div>
+                    </div>
+                `;
+            });
+            listContainer.innerHTML = html;
+        }
+
+        async function handleSaveAnnouncement(event) {
+            event.preventDefault();
+            const id = document.getElementById('announcement-id').value;
+            const title = document.getElementById('announcement-title').value;
+            const description = document.getElementById('announcement-description').value;
+            const image_url = document.getElementById('announcement-image').value;
+
+            const payload = { title, description, image_url };
+
+            let error;
+            if (id) {
+                const res = await supabaseClient.from('announcements').update(payload).eq('id', id);
+                error = res.error;
+            } else {
+                const res = await supabaseClient.from('announcements').insert([payload]);
+                error = res.error;
+            }
+
+            if (error) {
+                alert('Błąd podczas zapisu ogłoszenia: ' + error.message);
+            } else {
+                alert('Ogłoszenie zapisane pomyślnie!');
+                resetAnnouncementForm();
+                loadAdminAnnouncements();
+                loadAnnouncements();
+            }
+        }
+
+        window.editAnnouncement = function(item) {
+            document.getElementById('announcement-id').value = item.id;
+            document.getElementById('announcement-title').value = item.title;
+            document.getElementById('announcement-description').value = item.description;
+            document.getElementById('announcement-image').value = item.image_url || '';
+            window.scrollTo({ top: document.getElementById('announcement-form').offsetTop, behavior: 'smooth' });
+        }
+
+        window.resetAnnouncementForm = function() {
+            document.getElementById('announcement-id').value = '';
+            document.getElementById('announcement-form').reset();
+        }
+
+        window.deleteAnnouncement = async function(id) {
+            if (!confirm('Czy na pewno chcesz usunąć to ogłoszenie?')) return;
+
+            const { error } = await supabaseClient.from('announcements').delete().eq('id', id);
+            if (error) {
+                alert('Błąd usuwania: ' + error.message);
+            } else {
+                loadAdminAnnouncements();
+                loadAnnouncements();
+            }
+        }
+
+        // Inicjalizacja startowa
         fetchAnime();
     </script>
 </body>
