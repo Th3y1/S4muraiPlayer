@@ -135,12 +135,13 @@
             display: flex;
             flex-direction: column;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.25s ease;
         }
 
         .anime-card:hover {
             border-color: #ff3366;
-            transform: translateY(-3px);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(255, 51, 102, 0.2);
         }
 
         .anime-card img {
@@ -170,9 +171,21 @@
             letter-spacing: 0.5px;
         }
 
-        /* Widok Odtwarzacza */
-        #player-view {
-            display: none;
+        /* Widok Odtwarzacza i Animacje */
+        .view-section {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .hidden {
+            display: none !important;
+            opacity: 0;
+            transform: scale(0.98);
+        }
+
+        .visible {
+            display: block !important;
+            opacity: 1;
+            transform: scale(1);
         }
 
         .series-header-title {
@@ -389,7 +402,7 @@
     </div>
 
     <!-- WIDOK KATALOGU -->
-    <div id="catalog-view">
+    <div id="catalog-view" class="view-section visible">
         <!-- Wyszukiwanie -->
         <div class="search-box">
             <input type="text" id="search-input" placeholder="SZUKAJ W KATALOGU..." oninput="filterAnime()">
@@ -424,7 +437,7 @@
     </div>
 
     <!-- WIDOK ODTWARZACZA -->
-    <div id="player-view">
+    <div id="player-view" class="view-section hidden">
         <div class="series-header-title" id="player-series-title">Tytuł Serialu</div>
         <div class="player-container">
             <div class="video-frame-wrap">
@@ -537,34 +550,42 @@
             return [];
         }
 
-        // Otwieranie widoku odtwarzacza po kliknięciu w serial
+        // Płynne przełączanie do widoku odtwarzacza
         function openPlayer(animeId) {
             const anime = allAnimeData.find(a => a.id == animeId);
             if (!anime) return;
 
-            document.getElementById('catalog-view').style.display = 'none';
-            document.getElementById('player-view').style.display = 'block';
-            document.getElementById('player-series-title').textContent = anime.title;
+            const catalogView = document.getElementById('catalog-view');
+            const playerView = document.getElementById('player-view');
 
-            const eps = parseEpisodes(anime.episodes);
-            const episodesBar = document.getElementById('player-episodes-bar');
-            const iframe = document.getElementById('main-video-iframe');
+            catalogView.classList.remove('visible');
+            catalogView.classList.add('hidden');
 
-            if (eps.length === 0) {
-                episodesBar.innerHTML = '<span style="color: #888;">Brak dostępnych odcinków dla tego serialu.</span>';
-                iframe.src = '';
-                return;
-            }
+            setTimeout(() => {
+                playerView.classList.remove('hidden');
+                playerView.classList.add('visible');
+                document.getElementById('player-series-title').textContent = anime.title;
 
-            let buttonsHtml = '';
-            eps.forEach((ep, index) => {
-                const activeClass = index === 0 ? 'active' : '';
-                buttonsHtml += `<button class="ep-select-btn ${activeClass}" onclick="playEpisode('${ep.link}', this)">${ep.title}</button>`;
-            });
-            episodesBar.innerHTML = buttonsHtml;
+                const eps = parseEpisodes(anime.episodes);
+                const episodesBar = document.getElementById('player-episodes-bar');
+                const iframe = document.getElementById('main-video-iframe');
 
-            // Uruchom pierwszy odcinek domyślnie
-            iframe.src = eps[0].link;
+                if (eps.length === 0) {
+                    episodesBar.innerHTML = '<span style="color: #888;">Brak dostępnych odcinków dla tego serialu.</span>';
+                    iframe.src = '';
+                    return;
+                }
+
+                let buttonsHtml = '';
+                eps.forEach((ep, index) => {
+                    const activeClass = index === 0 ? 'active' : '';
+                    buttonsHtml += `<button class="ep-select-btn ${activeClass}" onclick="playEpisode('${ep.link}', this)">${ep.title}</button>`;
+                });
+                episodesBar.innerHTML = buttonsHtml;
+
+                iframe.src = eps[0].link;
+            }, 150);
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -574,10 +595,20 @@
             btnElement.classList.add('active');
         }
 
+        // Płynny powrót do katalogu
         function closePlayer() {
-            document.getElementById('main-video-iframe').src = '';
-            document.getElementById('player-view').style.display = 'none';
-            document.getElementById('catalog-view').style.display = 'block';
+            const catalogView = document.getElementById('catalog-view');
+            const playerView = document.getElementById('player-view');
+
+            playerView.classList.remove('visible');
+            playerView.classList.add('hidden');
+
+            setTimeout(() => {
+                document.getElementById('main-video-iframe').src = '';
+                catalogView.classList.remove('hidden');
+                catalogView.classList.add('visible');
+            }, 150);
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
