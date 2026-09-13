@@ -107,6 +107,9 @@
             letter-spacing: 1px;
             transition: 0.2s;
             box-shadow: 0 4px 10px rgba(88, 101, 242, 0.3);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .discord-btn:hover {
@@ -146,7 +149,7 @@
             border-left: 5px solid #ff0033;
             border-radius: 4px;
             padding: 35px;
-            margin-bottom: 35px;
+            margin-bottom: 25px;
             position: relative;
             overflow: hidden;
         }
@@ -200,66 +203,69 @@
             transform: translateY(-2px);
         }
 
-        /* SEKCJA PROPOZYCJI */
-        .suggest-section {
+        /* OGŁOSZENIA ADMINA */
+        .announcement-box {
+            background-color: #16121a;
+            border: 1px solid #3d1f2b;
+            border-left: 4px solid #ff0033;
+            border-radius: 4px;
+            padding: 18px 22px;
+            margin-bottom: 35px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .announcement-icon {
+            background-color: #ff0033;
+            color: white;
+            font-weight: 900;
+            font-size: 12px;
+            padding: 6px 10px;
+            border-radius: 3px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            flex-shrink: 0;
+        }
+
+        .announcement-text {
+            font-size: 14px;
+            color: #e1e1e6;
+            line-height: 1.4;
+        }
+
+        /* SEKCJA BRAKUJĄCYCH ODCINKÓW / DISCORD INFO */
+        .missing-section {
             background-color: #121218;
             border: 1px solid #22222e;
             border-radius: 4px;
-            padding: 25px;
+            padding: 30px;
             margin-bottom: 40px;
-        }
-
-        .suggest-title {
-            font-size: 20px;
-            font-weight: 900;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-        }
-
-        .suggest-subtitle {
-            color: #888899;
-            font-size: 13px;
-            margin-bottom: 20px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .form-field {
+            text-align: center;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            align-items: center;
+            gap: 15px;
         }
 
-        .form-field label {
-            font-size: 11px;
-            color: #777788;
-            font-weight: bold;
+        .missing-title {
+            font-size: 18px;
+            font-weight: 900;
             letter-spacing: 1px;
             text-transform: uppercase;
         }
 
-        .form-field input, .form-field select, .form-field textarea {
-            background-color: #0b0b0e;
-            border: 1px solid #22222e;
-            padding: 10px 14px;
-            border-radius: 4px;
-            color: white;
-            font-size: 13px;
+        .missing-desc {
+            color: #9999aa;
+            font-size: 14px;
+            max-width: 600px;
+            line-height: 1.5;
         }
 
-        .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
-            outline: none;
-            border-color: #ff0033;
-        }
-
-        .full-width {
-            grid-column: span 2;
+        .missing-desc span {
+            color: #ff0033;
+            font-weight: bold;
         }
 
         .catalog-header {
@@ -666,6 +672,17 @@
         <h2>Panel Zarządzania</h2>
 
         <div class="admin-section">
+            <h3>Edytuj Ogłoszenie Główne</h3>
+            <div class="form-row">
+                <div class="form-field full-width">
+                    <label>Treść ogłoszenia</label>
+                    <input type="text" id="admin-announcement-input" placeholder="Wpisz treść ogłoszenia widocznego na stronie...">
+                </div>
+            </div>
+            <button class="dev-btn" onclick="updateAnnouncement()" style="padding: 8px 16px; font-size: 13px;">Zapisz Ogłoszenie</button>
+        </div>
+
+        <div class="admin-section">
             <h3>Dodaj nowy serial</h3>
             <div class="form-row">
                 <div class="form-field">
@@ -752,30 +769,19 @@
             <button class="hero-btn" onclick="openPlayerByTitle('Tokidoki Bosotto Russia-go de Dereru Tonari no Alya-san')">Oglądaj Teraz</button>
         </div>
 
-        <div class="suggest-section">
-            <div class="suggest-title">Brakuje odcinków? Zaproponuj Anime!</div>
-            <div class="suggest-subtitle">Masz w planach serię lub tytuł, którego brakuje w bazie? Podaj tytuł oraz link do wideo!</div>
-            
-            <div class="form-row">
-                <div class="form-field">
-                    <label>Tytuł anime:</label>
-                    <input type="text" id="suggest-anime-title" placeholder="np. Tytuł serii...">
-                </div>
-                <div class="form-field">
-                    <label>Rok / Studio / Uwagi:</label>
-                    <input type="text" id="suggest-anime-info" placeholder="np. 2025 / dodatkowe info">
-                </div>
-                <div class="form-field full-width">
-                    <label>Link do playera / wideo:</label>
-                    <input type="text" id="suggest-ep-link" placeholder="https://... (link do odcinka)">
-                </div>
+        <!-- SEKCJA OGŁOSZEŃ (WIDOCZNA DLA WSZYSTKICH) -->
+        <div class="announcement-box" id="global-announcement-box">
+            <div class="announcement-icon">Ogłoszenie</div>
+            <div class="announcement-text" id="global-announcement-text">Ładowanie ogłoszenia...</div>
+        </div>
+
+        <!-- SEKCJA BRAKUJĄCYCH ODCINKÓW -->
+        <div class="missing-section">
+            <div class="missing-title">Nie ma odcinka jakiego byś chciał?</div>
+            <div class="missing-desc">
+                Wejdź na naszego discorda albo napisz do <span>anonime.thats.me</span> też na discord!
             </div>
-            <button class="dev-btn" onclick="sendSuggestion()" style="padding: 10px 24px;">Wyślij Propozycję</button>
-            
-            <div style="margin-top: 20px; font-size: 12px; color: #777788; border-top: 1px solid #22222e; padding-top: 12px;">
-                <span style="font-weight: bold; text-transform: uppercase; color: #aaa;">Nadesłane propozcje:</span>
-                <div id="suggestions-list" style="margin-top: 6px; color: #888;">Brak nadesłanych propozycji.</div>
-            </div>
+            <a href="https://discord.gg/M6uy839mk" target="_blank" class="discord-btn" style="margin-top: 5px;">Dołącz do Discorda</a>
         </div>
 
         <div class="categories" id="categories-container">
@@ -840,7 +846,7 @@
         let allAnimeData = [];
         let currentCategory = 'Wszystkie';
         let currentActiveAnime = null;
-        let userSuggestions = [];
+        let currentAnnouncementText = '';
 
         function toggleDevPanel() {
             const panel = document.getElementById('dev-panel');
@@ -851,9 +857,71 @@
                 if (pass === 'Korneliusz1111') {
                     panel.style.display = 'block';
                     populateSelects();
+                    document.getElementById('admin-announcement-input').value = currentAnnouncementText;
                 } else if (pass !== null) {
                     alert('Błędne hasło!');
                 }
+            }
+        }
+
+        async function fetchAnnouncement() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('S4muraiPlayer')
+                    .select('*')
+                    .eq('title', '_GLOBAL_CONFIG_')
+                    .single();
+
+                if (data && data.category) {
+                    currentAnnouncementText = data.category;
+                    document.getElementById('global-announcement-text').textContent = currentAnnouncementText;
+                    document.getElementById('global-announcement-box').style.display = 'flex';
+                } else {
+                    // Jeśli brak konfiguracji w bazie, ustaw domyślne ogłoszenie
+                    currentAnnouncementText = 'Witajcie na S4murai Player! Sprawdzajcie nowe odcinki w katalogu.';
+                    document.getElementById('global-announcement-text').textContent = currentAnnouncementText;
+                }
+            } catch (err) {
+                document.getElementById('global-announcement-text').textContent = 'Witajcie na S4murai Player! Miłego oglądania.';
+            }
+        }
+
+        async function updateAnnouncement() {
+            const newText = document.getElementById('admin-announcement-input').value;
+            if (!newText) {
+                alert('Treść ogłoszenia nie może być pusta!');
+                return;
+            }
+
+            try {
+                // Sprawdzamy czy istnieje rekord konfiguracyjny
+                const { data } = await supabaseClient
+                    .from('S4muraiPlayer')
+                    .select('title')
+                    .eq('title', '_GLOBAL_CONFIG_')
+                    .single();
+
+                let error;
+                if (data) {
+                    const res = await supabaseClient
+                        .from('S4muraiPlayer')
+                        .update({ category: newText })
+                        .eq('title', '_GLOBAL_CONFIG_');
+                    error = res.error;
+                } else {
+                    const res = await supabaseClient
+                        .from('S4muraiPlayer')
+                        .insert([{ title: '_GLOBAL_CONFIG_', category: newText, episodes: [], comments: [] }]);
+                    error = res.error;
+                }
+
+                if (error) throw error;
+
+                currentAnnouncementText = newText;
+                document.getElementById('global-announcement-text').textContent = newText;
+                alert('Ogłoszenie zostało zaktualizowane pomyślnie!');
+            } catch (err) {
+                alert('Błąd aktualizacji ogłoszenia: ' + err.message);
             }
         }
 
@@ -862,6 +930,8 @@
             const gridDiv = document.getElementById('anime-grid');
             errorDiv.style.display = 'none';
             
+            await fetchAnnouncement();
+
             try {
                 const { data, error } = await supabaseClient
                     .from('S4muraiPlayer')
@@ -869,7 +939,8 @@
 
                 if (error) throw error;
 
-                allAnimeData = data || [];
+                // Odfiltrowujemy specjalny rekord konfiguracyjny z katalogu anime
+                allAnimeData = (data || []).filter(item => item.title !== '_GLOBAL_CONFIG_');
                 filterAnime();
                 populateSelects();
                 loadEditData();
@@ -938,7 +1009,6 @@
 
         function formatVideoLink(url) {
             if (!url) return '';
-            // Automatyczne wsparcie dla linków YouTube wklejanych w panelu
             if (url.includes('youtube.com/watch?v=')) {
                 const videoId = url.split('v=')[1]?.split('&')[0];
                 return `https://www.youtube.com/embed/${videoId}`;
@@ -1015,9 +1085,8 @@
         async function rateAnime(stars) {
             if (!currentActiveAnime) return;
             
-            // Proste symulowanie oceny w bazie (uśrednianie)
             let currentTotal = currentActiveAnime.rating_total || 9.1;
-            let newAvg = ((currentTotal + stars * 2) / 2); // skalowanie do 10
+            let newAvg = ((currentTotal + stars * 2) / 2);
             if (newAvg > 10) newAvg = 10;
 
             const { error } = await supabaseClient
@@ -1277,30 +1346,6 @@
                 loadEditData();
                 await fetchAnime();
             }
-        }
-
-        function sendSuggestion() {
-            const title = document.getElementById('suggest-anime-title').value;
-            const info = document.getElementById('suggest-anime-info').value;
-            const link = document.getElementById('suggest-ep-link').value;
-
-            if (!title || !link) {
-                alert('Podaj przynajmniej tytuł anime oraz link do wideo!');
-                return;
-            }
-
-            userSuggestions.push({ title, info, link });
-            
-            let listHtml = '';
-            userSuggestions.forEach((s) => {
-                listHtml += `<div>• <b>${s.title}</b> (${s.info || 'brak dodatków'}) - <a href="${s.link}" target="_blank" style="color: #ff0033;">Link</a></div>`;
-            });
-            document.getElementById('suggestions-list').innerHTML = listHtml;
-
-            document.getElementById('suggest-anime-title').value = '';
-            document.getElementById('suggest-anime-info').value = '';
-            document.getElementById('suggest-ep-link').value = '';
-            alert('Propozycja została wysłana!');
         }
 
         fetchAnime();
