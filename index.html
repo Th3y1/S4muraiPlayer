@@ -112,7 +112,6 @@
             margin-bottom: 4px;
         }
 
-        /* Sekcja główna / Katalog */
         .section-title {
             font-size: 20px;
             margin-bottom: 20px;
@@ -166,7 +165,7 @@
             color: var(--text-muted);
         }
 
-        /* Widok Odtwarzacza */
+        /* Odtwarzacz */
         #player-view {
             display: none;
         }
@@ -312,9 +311,7 @@
         <!-- WIDOK KATALOGU -->
         <div id="catalog-view">
             <h3 class="section-title">Dostępne Seriale</h3>
-            <div id="serials-grid" class="serials-grid">
-                <!-- Ładowane dynamicznie -->
-            </div>
+            <div id="serials-grid" class="serials-grid"></div>
         </div>
 
         <!-- WIDOK ODTWARZACZA -->
@@ -326,9 +323,7 @@
                     <iframe id="video-frame" src="" allowfullscreen></iframe>
                 </div>
                 <h4 style="margin-bottom: 10px; font-size: 14px; color: var(--text-muted);">Odcinki:</h4>
-                <div id="episodes-container" class="episodes-list">
-                    <!-- Przyciski odcinków -->
-                </div>
+                <div id="episodes-container" class="episodes-list"></div>
             </div>
         </div>
 
@@ -439,14 +434,18 @@
 
             let episodes = [];
             try {
-                episodes = JSON.parse(serial.episodes || '[]');
+                // Supabase może zwrócić episodes jako obiekt (jsonb) lub string (text)
+                if (typeof serial.episodes === 'string') {
+                    episodes = JSON.parse(serial.episodes || '[]');
+                } else if (Array.isArray(serial.episodes)) {
+                    episodes = serial.episodes;
+                }
             } catch {
                 episodes = [];
             }
 
             const epContainer = document.getElementById('episodes-container');
             epContainer.innerHTML = '';
-
             const iframe = document.getElementById('video-frame');
 
             if (episodes.length > 0) {
@@ -471,6 +470,9 @@
 
         function showCatalog() {
             document.getElementById('player-view').style.display = 'none';
+            document.getElementById('admin-panel').style.display = 'none';
+            isAdminOpen = false;
+            document.getElementById('admin-toggle-btn').textContent = 'PANEL ADMINA';
             document.getElementById('catalog-view').style.display = 'block';
             loadCatalog();
         }
@@ -569,7 +571,7 @@
 
             const { error } = await supabaseClient
                 .from('S4muraiPlayer')
-                .insert([{ title, category, image, episodes: JSON.stringify([]) }]);
+                .insert([{ title, category, image, episodes: [] }]);
 
             if (error) {
                 alert('Błąd: ' + error.message);
@@ -603,7 +605,11 @@
 
             let episodesList = [];
             try {
-                episodesList = JSON.parse(data.episodes || '[]');
+                if (typeof data.episodes === 'string') {
+                    episodesList = JSON.parse(data.episodes || '[]');
+                } else if (Array.isArray(data.episodes)) {
+                    episodesList = data.episodes;
+                }
             } catch {
                 episodesList = [];
             }
@@ -612,7 +618,7 @@
 
             const { error: updateError } = await supabaseClient
                 .from('S4muraiPlayer')
-                .update({ episodes: JSON.stringify(episodesList) })
+                .update({ episodes: episodesList })
                 .eq('title', serialTitle);
 
             if (updateError) {
