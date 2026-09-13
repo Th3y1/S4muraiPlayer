@@ -244,7 +244,7 @@
             text-transform: uppercase;
         }
 
-        .form-field input, .form-field select {
+        .form-field input, .form-field select, .form-field textarea {
             background-color: #0b0b0e;
             border: 1px solid #22222e;
             padding: 10px 14px;
@@ -253,7 +253,7 @@
             font-size: 13px;
         }
 
-        .form-field input:focus, .form-field select:focus {
+        .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
             outline: none;
             border-color: #ff0033;
         }
@@ -389,11 +389,43 @@
         .series-header-title {
             font-size: 24px;
             font-weight: bold;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             border-left: 4px solid #ff0033;
             padding-left: 12px;
             text-transform: uppercase;
             letter-spacing: 1px;
+        }
+
+        .series-meta-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background: #121218;
+            padding: 12px 20px;
+            border: 1px solid #22222e;
+            border-radius: 4px;
+        }
+
+        .rating-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .star-btn {
+            background: none;
+            border: none;
+            color: #555;
+            cursor: pointer;
+            font-size: 18px;
+            transition: 0.2s;
+        }
+        .star-btn:hover, .star-btn.active {
+            color: #ffd700;
         }
 
         .player-container {
@@ -465,6 +497,65 @@
             background-color: #2d2d3d;
         }
 
+        /* SEKCJA KOMENTARZY */
+        .comments-section {
+            margin-top: 30px;
+            background-color: #121218;
+            border: 1px solid #22222e;
+            border-radius: 4px;
+            padding: 20px;
+        }
+
+        .comments-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            color: #ff0033;
+            letter-spacing: 1px;
+        }
+
+        .comment-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .comment-form input, .comment-form textarea {
+            background-color: #0b0b0e;
+            border: 1px solid #22222e;
+            padding: 10px;
+            border-radius: 4px;
+            color: white;
+            font-size: 13px;
+        }
+
+        .comment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .comment-item {
+            background-color: #0b0b0e;
+            border: 1px solid #22222e;
+            padding: 12px;
+            border-radius: 4px;
+        }
+
+        .comment-author {
+            font-weight: bold;
+            font-size: 13px;
+            color: #ff0033;
+            margin-bottom: 4px;
+        }
+
+        .comment-text {
+            font-size: 13px;
+            color: #ccc;
+        }
+
         /* PANEL ADMINA */
         #dev-panel {
             display: none;
@@ -515,7 +606,6 @@
             display: none;
         }
 
-        /* Zarządzanie odcinkami w edycji */
         .admin-ep-list {
             margin-top: 10px;
             display: flex;
@@ -608,7 +698,7 @@
                     <input type="text" id="ep-number" placeholder="np. Odcinek 1">
                 </div>
                 <div class="form-field full-width">
-                    <label>Link do odtwarzacza (URL)</label>
+                    <label>Link do odtwarzacza lub YouTube</label>
                     <input type="text" id="ep-link" placeholder="https://...">
                 </div>
             </div>
@@ -638,7 +728,7 @@
                 </div>
                 
                 <div class="form-field full-width">
-                    <label>Zarządzaj odcinkami tego serialu (usuwanie pojedynczych):</label>
+                    <label>Zarządzaj odcinkami tego serialu:</label>
                     <div id="admin-episodes-container" class="admin-ep-list">
                         <span style="color: #666; font-size: 12px;">Wybierz serial powyżej, aby zobaczyć odcinki.</span>
                     </div>
@@ -704,12 +794,41 @@
     <!-- WIDOK ODTWARZACZA -->
     <div id="player-view" class="view-section hidden">
         <div class="series-header-title" id="player-series-title">Tytuł Serialu</div>
+        
+        <div class="series-meta-row">
+            <div class="rating-box" id="rating-container">
+                Ocena: <span id="avg-rating-val">9.1</span>/10 
+                <span style="margin-left: 15px;">Twoja ocena:</span>
+                <button class="star-btn" onclick="rateAnime(1)">★</button>
+                <button class="star-btn" onclick="rateAnime(2)">★</button>
+                <button class="star-btn" onclick="rateAnime(3)">★</button>
+                <button class="star-btn" onclick="rateAnime(4)">★</button>
+                <button class="star-btn" onclick="rateAnime(5)">★</button>
+            </div>
+        </div>
+
         <div class="player-container">
             <div class="video-frame-wrap">
                 <iframe id="main-video-iframe" src="" allowfullscreen></iframe>
             </div>
             <div class="episodes-bar" id="player-episodes-bar"></div>
-            <button class="back-btn" onclick="closePlayer()">← Powrót do katalogu</button>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                <button class="back-btn" onclick="closePlayer()">← Powrót do katalogu</button>
+            </div>
+        </div>
+
+        <!-- Sekcja Komentarzy -->
+        <div class="comments-section">
+            <div class="comments-title">Komentarze społeczności</div>
+            <div class="comment-form">
+                <input type="text" id="comment-author" placeholder="Twój nick...">
+                <textarea id="comment-text" placeholder="Napisz coś o tym serialu..." rows="2"></textarea>
+                <button class="dev-btn" onclick="addComment()" style="width: fit-content; padding: 6px 16px; font-size: 12px;">Dodaj komentarz</button>
+            </div>
+            <div class="comment-list" id="comments-list">
+                <span style="color: #666; font-size: 12px;">Brak komentarzy. Bądź pierwszy!</span>
+            </div>
         </div>
     </div>
 
@@ -720,6 +839,7 @@
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         let allAnimeData = [];
         let currentCategory = 'Wszystkie';
+        let currentActiveAnime = null;
         let userSuggestions = [];
 
         function toggleDevPanel() {
@@ -752,7 +872,7 @@
                 allAnimeData = data || [];
                 filterAnime();
                 populateSelects();
-                loadEditData(); // Odświeża podgląd edycji jeśli coś jest wybrane
+                loadEditData();
 
             } catch (err) {
                 console.error(err);
@@ -787,12 +907,12 @@
 
             let html = '';
             filtered.forEach(anime => {
-                let eps = parseEpisodes(anime.episodes);
                 const cardIdentifier = anime.title;
+                const rating = anime.rating_avg ? anime.rating_avg.toFixed(1) : '9.1';
 
                 html += `
                     <div class="anime-card" onclick="openPlayerByTitle('${CSS.escape(cardIdentifier)}')">
-                        <div class="anime-badge">★ 9.1</div>
+                        <div class="anime-badge">★ ${rating}</div>
                         <img src="${anime.image || 'https://via.placeholder.com/210x290?text=Brak+Okladki'}" alt="Okładka">
                         <div class="anime-info">
                             <div class="anime-title">${anime.title}</div>
@@ -816,9 +936,23 @@
             return [];
         }
 
+        function formatVideoLink(url) {
+            if (!url) return '';
+            // Automatyczne wsparcie dla linków YouTube wklejanych w panelu
+            if (url.includes('youtube.com/watch?v=')) {
+                const videoId = url.split('v=')[1]?.split('&')[0];
+                return `https://www.youtube.com/embed/${videoId}`;
+            } else if (url.includes('youtu.be/')) {
+                const videoId = url.split('youtu.be/')[1]?.split('?')[0];
+                return `https://www.youtube.com/embed/${videoId}`;
+            }
+            return url;
+        }
+
         function openPlayerByTitle(title) {
             const anime = allAnimeData.find(a => a.title.toLowerCase() === title.toLowerCase());
             if (!anime) return;
+            currentActiveAnime = anime;
 
             const catalogView = document.getElementById('catalog-view');
             const playerView = document.getElementById('player-view');
@@ -830,6 +964,7 @@
                 playerView.classList.remove('hidden');
                 playerView.classList.add('visible');
                 document.getElementById('player-series-title').textContent = anime.title;
+                document.getElementById('avg-rating-val').textContent = anime.rating_avg ? anime.rating_avg.toFixed(1) : '9.1';
 
                 const eps = parseEpisodes(anime.episodes);
                 const episodesBar = document.getElementById('player-episodes-bar');
@@ -838,24 +973,24 @@
                 if (eps.length === 0) {
                     episodesBar.innerHTML = '<span style="color: #888;">Brak dostępnych odcinków dla tego serialu.</span>';
                     iframe.src = '';
-                    return;
+                } else {
+                    let buttonsHtml = '';
+                    eps.forEach((ep, index) => {
+                        const activeClass = index === 0 ? 'active' : '';
+                        buttonsHtml += `<button class="ep-select-btn ${activeClass}" onclick="playEpisode('${ep.link}', this)">${ep.title}</button>`;
+                    });
+                    episodesBar.innerHTML = buttonsHtml;
+                    iframe.src = formatVideoLink(eps[0].link);
                 }
 
-                let buttonsHtml = '';
-                eps.forEach((ep, index) => {
-                    const activeClass = index === 0 ? 'active' : '';
-                    buttonsHtml += `<button class="ep-select-btn ${activeClass}" onclick="playEpisode('${ep.link}', this)">${ep.title}</button>`;
-                });
-                episodesBar.innerHTML = buttonsHtml;
-
-                iframe.src = eps[0].link;
+                loadComments();
             }, 150);
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function playEpisode(link, btnElement) {
-            document.getElementById('main-video-iframe').src = link;
+            document.getElementById('main-video-iframe').src = formatVideoLink(link);
             document.querySelectorAll('.ep-select-btn').forEach(b => b.classList.remove('active'));
             btnElement.classList.add('active');
         }
@@ -873,7 +1008,85 @@
                 catalogView.classList.add('visible');
             }, 150);
 
+            currentActiveAnime = null;
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        async function rateAnime(stars) {
+            if (!currentActiveAnime) return;
+            
+            // Proste symulowanie oceny w bazie (uśrednianie)
+            let currentTotal = currentActiveAnime.rating_total || 9.1;
+            let newAvg = ((currentTotal + stars * 2) / 2); // skalowanie do 10
+            if (newAvg > 10) newAvg = 10;
+
+            const { error } = await supabaseClient
+                .from('S4muraiPlayer')
+                .update({ rating_avg: newAvg, rating_total: stars })
+                .eq('title', currentActiveAnime.title);
+
+            if (!error) {
+                document.getElementById('avg-rating-val').textContent = newAvg.toFixed(1);
+                alert('Dziękujemy za ocenę!');
+                await fetchAnime();
+            }
+        }
+
+        function parseComments(commentsField) {
+            try {
+                if (Array.isArray(commentsField)) return commentsField;
+                if (typeof commentsField === 'string') return JSON.parse(commentsField);
+            } catch(e) {}
+            return [];
+        }
+
+        async function loadComments() {
+            if (!currentActiveAnime) return;
+            const listDiv = document.getElementById('comments-list');
+            const comments = parseComments(currentActiveAnime.comments);
+
+            if (comments.length === 0) {
+                listDiv.innerHTML = '<span style="color: #666; font-size: 12px;">Brak komentarzy. Bądź pierwszy!</span>';
+                return;
+            }
+
+            let html = '';
+            comments.forEach(c => {
+                html += `
+                    <div class="comment-item">
+                        <div class="comment-author">${c.author}</div>
+                        <div class="comment-text">${c.text}</div>
+                    </div>
+                `;
+            });
+            listDiv.innerHTML = html;
+        }
+
+        async function addComment() {
+            if (!currentActiveAnime) return;
+            const author = document.getElementById('comment-author').value.trim();
+            const text = document.getElementById('comment-text').value.trim();
+
+            if (!author || !text) {
+                alert('Wpisz swój nick i treść komentarza!');
+                return;
+            }
+
+            let comments = parseComments(currentActiveAnime.comments);
+            comments.unshift({ author, text });
+
+            const { error } = await supabaseClient
+                .from('S4muraiPlayer')
+                .update({ comments: comments })
+                .eq('title', currentActiveAnime.title);
+
+            if (error) {
+                alert('Błąd dodawania komentarza: ' + error.message);
+            } else {
+                currentActiveAnime.comments = comments;
+                document.getElementById('comment-text').value = '';
+                loadComments();
+            }
         }
 
         function populateSelects() {
@@ -906,7 +1119,7 @@
 
             const { error } = await supabaseClient
                 .from('S4muraiPlayer')
-                .insert([{ title, category, image, episodes: [] }]);
+                .insert([{ title, category, image, episodes: [], comments: [], rating_avg: 9.1 }]);
 
             if (error) {
                 alert('Błąd: ' + error.message);
@@ -1001,7 +1214,7 @@
                 if (!animeObj) return;
 
                 let eps = parseEpisodes(animeObj.episodes);
-                eps.splice(epIndex, 1); // Usuwa odcinek z tablicy po indeksie
+                eps.splice(epIndex, 1);
 
                 const { error } = await supabaseClient
                     .from('S4muraiPlayer')
@@ -1011,6 +1224,7 @@
                 if (error) throw error;
 
                 await fetchAnime();
+                loadEditData();
                 alert('Odcinek został usunięty!');
             } catch (err) {
                 alert('Błąd podczas usuwania odcinka: ' + err.message);
