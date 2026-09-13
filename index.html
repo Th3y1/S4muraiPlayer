@@ -65,8 +65,13 @@
             border-radius: 4px;
         }
         #error-msg {
-            color: #e50914;
+            color: #ff5555;
+            background: #331111;
+            padding: 10px;
+            border-radius: 4px;
             margin-top: 10px;
+            white-space: pre-wrap;
+            font-family: monospace;
         }
     </style>
 </head>
@@ -139,7 +144,8 @@
             listDiv.innerHTML = html;
 
         } catch (err) {
-            errorDiv.textContent = 'Błąd pobierania: ' + err.message;
+            console.error(err);
+            errorDiv.textContent = 'Szczegóły błędu Supabase:\n' + JSON.stringify(err, null, 2);
             listDiv.innerHTML = '';
         }
     }
