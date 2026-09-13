@@ -26,28 +26,59 @@
             margin-bottom: 30px;
             border-bottom: 1px solid #22222e;
             padding-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
-        h1 {
-            color: #ff3366;
+        .logo {
+            color: #ffffff;
             font-size: 24px;
+            font-weight: bold;
             letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .logo span {
+            color: #ff3366;
+            display: block;
+            font-size: 18px;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .discord-btn {
+            background-color: #5865F2;
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .discord-btn:hover {
+            background-color: #4752C4;
         }
 
         .dev-btn {
-            background-color: #22222e;
-            color: #aaa;
+            background-color: #ff3366;
+            color: white;
             border: none;
             padding: 8px 15px;
             border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
+            font-weight: bold;
             transition: 0.2s;
         }
 
         .dev-btn:hover {
-            background-color: #ff3366;
-            color: white;
+            background-color: #e02c58;
         }
 
         .categories {
@@ -103,6 +134,13 @@
             border: 1px solid #22222e;
             display: flex;
             flex-direction: column;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .anime-card:hover {
+            border-color: #ff3366;
+            transform: translateY(-3px);
         }
 
         .anime-card img {
@@ -132,29 +170,88 @@
             letter-spacing: 0.5px;
         }
 
-        .episodes-list {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            max-height: 150px;
-            overflow-y: auto;
-            margin-top: auto;
+        /* Widok Odtwarzacza */
+        #player-view {
+            display: none;
         }
 
-        .ep-btn {
-            background-color: #22222e;
+        .series-header-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            border-left: 4px solid #ff3366;
+            padding-left: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .player-container {
+            background-color: #16161f;
+            border: 1px solid #2d2d3d;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .video-frame-wrap {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* Proporcje 16:9 */
+            height: 0;
+            background-color: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .video-frame-wrap iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .episodes-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .ep-select-btn {
+            background-color: #1f1f2e;
             color: #ddd;
-            text-decoration: none;
-            padding: 6px 10px;
+            border: 1px solid #2d2d3d;
+            padding: 8px 16px;
             border-radius: 6px;
-            font-size: 13px;
-            text-align: center;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
             transition: 0.2s;
         }
 
-        .ep-btn:hover {
+        .ep-select-btn:hover, .ep-select-btn.active {
             background-color: #ff3366;
+            border-color: #ff3366;
             color: white;
+        }
+
+        .back-btn {
+            background-color: #1f1f2e;
+            color: #fff;
+            border: 1px solid #2d2d3d;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .back-btn:hover {
+            background-color: #2d2d3d;
         }
 
         /* Panel Administratora */
@@ -239,11 +336,14 @@
 <body>
 
     <header>
-        <h1>S4muraiPlayer</h1>
-        <button class="dev-btn" onclick="toggleDevPanel()">Panel Admina</button>
+        <div class="logo">S4murai <span>Player</span></div>
+        <div class="header-right">
+            <a href="https://discord.gg/twojlink" target="_blank" class="discord-btn">DISCORD</a>
+            <button class="dev-btn" onclick="toggleDevPanel()">PANEL ADMINA</button>
+        </div>
     </header>
 
-    <div id="error-box" class="error-box" id="error-msg"></div>
+    <div id="error-box" class="error-box"></div>
 
     <!-- PANEL ADMINA -->
     <div id="dev-panel">
@@ -288,36 +388,53 @@
         </div>
     </div>
 
-    <!-- Wyszukiwanie -->
-    <div class="search-box">
-        <input type="text" id="search-input" placeholder="Szukaj serialu..." oninput="filterAnime()">
-    </div>
+    <!-- WIDOK KATALOGU -->
+    <div id="catalog-view">
+        <!-- Wyszukiwanie -->
+        <div class="search-box">
+            <input type="text" id="search-input" placeholder="SZUKAJ W KATALOGU..." oninput="filterAnime()">
+        </div>
 
-    <!-- Kategorie -->
-    <div class="categories" id="categories-container">
-        <div class="cat-chip active" onclick="filterCategory('Wszystkie', this)">Wszystkie</div>
-        <div class="cat-chip" onclick="filterCategory('Akcja', this)">Akcja</div>
-        <div class="cat-chip" onclick="filterCategory('Romans', this)">Romans</div>
-        <div class="cat-chip" onclick="filterCategory('Fantasy', this)">Fantasy</div>
-        <div class="cat-chip" onclick="filterCategory('Inne', this)">Inne</div>
-    </div>
+        <!-- Kategorie -->
+        <div class="categories" id="categories-container">
+            <div class="cat-chip active" onclick="filterCategory('Wszystkie', this)">Wszystkie</div>
+            <div class="cat-chip" onclick="filterCategory('Akcja', this)">Akcja</div>
+            <div class="cat-chip" onclick="filterCategory('Romans', this)">Romans</div>
+            <div class="cat-chip" onclick="filterCategory('Fantasy', this)">Fantasy</div>
+            <div class="cat-chip" onclick="filterCategory('Inne', this)">Inne</div>
+        </div>
 
-    <!-- Sekcja proponowania odcinków dla użytkowników -->
-    <div style="background-color: #16161f; border: 1px solid #22222e; padding: 15px; border-radius: 12px; margin-bottom: 25px;">
-        <h3 style="font-size: 15px; margin-bottom: 10px; color: #ff3366;">Zaproponuj / Dodaj odcinek</h3>
-        <div class="form-group" style="margin-bottom: 0;">
-            <select id="suggest-anime-select">
-                <option value="">Wybierz serial...</option>
-            </select>
-            <input type="text" id="suggest-ep-title" placeholder="Tytuł / Numer odcinka">
-            <input type="text" id="suggest-ep-link" placeholder="Link do odtwarzacza">
-            <button class="admin-btn" onclick="suggestEpisode()">Dodaj Odcinek</button>
+        <!-- Sekcja proponowania odcinków dla użytkowników -->
+        <div style="background-color: #16161f; border: 1px solid #22222e; padding: 15px; border-radius: 12px; margin-bottom: 25px;">
+            <h3 style="font-size: 15px; margin-bottom: 10px; color: #ff3366;">Zaproponuj / Dodaj odcinek</h3>
+            <div class="form-group" style="margin-bottom: 0;">
+                <select id="suggest-anime-select">
+                    <option value="">Wybierz serial...</option>
+                </select>
+                <input type="text" id="suggest-ep-title" placeholder="Tytuł / Numer odcinka">
+                <input type="text" id="suggest-ep-link" placeholder="Link do odtwarzacza">
+                <button class="admin-btn" onclick="suggestEpisode()">Dodaj Odcinek</button>
+            </div>
+        </div>
+
+        <!-- Siatka z anime -->
+        <div class="anime-grid" id="anime-grid">
+            <!-- Generowane dynamicznie -->
         </div>
     </div>
 
-    <!-- Siatka z anime -->
-    <div class="anime-grid" id="anime-grid">
-        <!-- Generowane dynamicznie -->
+    <!-- WIDOK ODTWARZACZA -->
+    <div id="player-view">
+        <div class="series-header-title" id="player-series-title">Tytuł Serialu</div>
+        <div class="player-container">
+            <div class="video-frame-wrap">
+                <iframe id="main-video-iframe" src="" allowfullscreen></iframe>
+            </div>
+            <div class="episodes-bar" id="player-episodes-bar">
+                <!-- Przyciski odcinków generowane dynamicznie -->
+            </div>
+            <button class="back-btn" onclick="closePlayer()">← POWRÓT DO KATALOGU</button>
+        </div>
     </div>
 
     <script>
@@ -392,43 +509,76 @@
 
             let html = '';
             filtered.forEach(anime => {
-                let eps = [];
-                try {
-                    if (Array.isArray(anime.episodes)) {
-                        eps = anime.episodes;
-                    } else if (typeof anime.episodes === 'string' && anime.episodes.trim() !== '') {
-                        const parsed = JSON.parse(anime.episodes);
-                        if (Array.isArray(parsed)) eps = parsed;
-                    }
-                } catch(e) {
-                    eps = [];
-                }
-
-                let episodesHtml = '';
-                if (eps.length === 0) {
-                    episodesHtml = '<span style="color: #555566; font-size: 12px;">Brak odcinków</span>';
-                } else {
-                    eps.forEach(ep => {
-                        if (ep && ep.title && ep.link) {
-                            episodesHtml += `<a href="${ep.link}" target="_blank" class="ep-btn">${ep.title}</a>`;
-                        }
-                    });
-                }
+                let eps = parseEpisodes(anime.episodes);
 
                 html += `
-                    <div class="anime-card">
+                    <div class="anime-card" onclick="openPlayer('${anime.id}')">
                         <img src="${anime.image || 'https://via.placeholder.com/240x330?text=Brak+Okladki'}" alt="Okładka">
                         <div class="anime-info">
                             <div class="anime-title">${anime.title}</div>
                             <div class="anime-cat">${anime.category || 'Inne'}</div>
-                            <div class="episodes-list">
-                                ${episodesHtml}
-                            </div>
+                            <div style="font-size: 12px; color: #888; margin-top: auto;">Odcinków: ${eps.length}</div>
                         </div>
                     </div>
                 `;
             });
             gridDiv.innerHTML = html;
+        }
+
+        function parseEpisodes(episodesField) {
+            try {
+                if (Array.isArray(episodesField)) {
+                    return episodesField;
+                } else if (typeof episodesField === 'string' && episodesField.trim() !== '') {
+                    const parsed = JSON.parse(episodesField);
+                    if (Array.isArray(parsed)) return parsed;
+                }
+            } catch(e) {}
+            return [];
+        }
+
+        // Otwieranie widoku odtwarzacza po kliknięciu w serial
+        function openPlayer(animeId) {
+            const anime = allAnimeData.find(a => a.id == animeId);
+            if (!anime) return;
+
+            document.getElementById('catalog-view').style.display = 'none';
+            document.getElementById('player-view').style.display = 'block';
+            document.getElementById('player-series-title').textContent = anime.title;
+
+            const eps = parseEpisodes(anime.episodes);
+            const episodesBar = document.getElementById('player-episodes-bar');
+            const iframe = document.getElementById('main-video-iframe');
+
+            if (eps.length === 0) {
+                episodesBar.innerHTML = '<span style="color: #888;">Brak dostępnych odcinków dla tego serialu.</span>';
+                iframe.src = '';
+                return;
+            }
+
+            let buttonsHtml = '';
+            eps.forEach((ep, index) => {
+                const activeClass = index === 0 ? 'active' : '';
+                buttonsHtml += `<button class="ep-select-btn ${activeClass}" onclick="playEpisode('${ep.link}', this)">${ep.title}</button>`;
+            });
+            episodesBar.innerHTML = buttonsHtml;
+
+            // Uruchom pierwszy odcinek domyślnie
+            iframe.src = eps[0].link;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function playEpisode(link, btnElement) {
+            document.getElementById('main-video-iframe').src = link;
+            document.querySelectorAll('.ep-select-btn').forEach(b => b.classList.remove('active'));
+            btnElement.classList.add('active');
+        }
+
+        function closePlayer() {
+            document.getElementById('main-video-iframe').src = '';
+            document.getElementById('player-view').style.display = 'none';
+            document.getElementById('catalog-view').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function populateSelects() {
@@ -495,7 +645,7 @@
                 return;
             }
 
-            await saveEpisodeToDatabase(animeId, epTitle, epLink, 'Twoja propozycja odcinka z odtwarzaczem została dodana pomyślnie!');
+            await saveEpisodeToDatabase(animeId, epTitle, epLink, 'Twoja propozycja odcinka została dodana pomyślnie!');
             document.getElementById('suggest-ep-title').value = '';
             document.getElementById('suggest-ep-link').value = '';
         }
@@ -507,16 +657,7 @@
                 return;
             }
 
-            let eps = [];
-            try {
-                if (Array.isArray(animeObj.episodes)) {
-                    eps = [...animeObj.episodes];
-                } else if (typeof animeObj.episodes === 'string' && animeObj.episodes.trim() !== '') {
-                    const parsed = JSON.parse(animeObj.episodes);
-                    if (Array.isArray(parsed)) eps = parsed;
-                }
-            } catch(e) { eps = []; }
-
+            let eps = parseEpisodes(animeObj.episodes);
             eps.push({ title: epTitle, link: epLink });
 
             const { error } = await supabaseClient
