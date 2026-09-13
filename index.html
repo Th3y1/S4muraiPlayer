@@ -285,7 +285,7 @@
         } catch (err) {
             console.error(err);
             errorDiv.style.display = 'block';
-            errorDiv.textContent = 'Błąd pobierania danych:\n' + (err.message || JSON.stringify(err, null, 2)) + '\n\nWskazówka: Uruchom plik przez serwer lokalny (np. Live Server w VS Code) zamiast otwierać go bezpośrednio z dysku.';
+            errorDiv.textContent = 'Błąd pobierania danych:\n' + (err.message || JSON.stringify(err, null, 2));
             gridDiv.innerHTML = '';
         }
     }
@@ -311,9 +311,15 @@
 
         let html = '';
         filtered.forEach(anime => {
+            // Bezpieczne parsowanie odcinków (zabezpieczenie przed brakiem tablicy)
             let eps = [];
             try {
-                eps = typeof anime.episodes === 'string' ? JSON.parse(anime.episodes) : (anime.episodes || []);
+                if (Array.isArray(anime.episodes)) {
+                    eps = anime.episodes;
+                } else if (typeof anime.episodes === 'string') {
+                    eps = JSON.parse(anime.episodes);
+                    if (!Array.isArray(eps)) eps = [];
+                }
             } catch(e) {
                 eps = [];
             }
@@ -395,7 +401,12 @@
 
         let eps = [];
         try {
-            eps = typeof animeObj.episodes === 'string' ? JSON.parse(animeObj.episodes) : (animeObj.episodes || []);
+            if (Array.isArray(animeObj.episodes)) {
+                eps = animeObj.episodes;
+            } else if (typeof animeObj.episodes === 'string') {
+                eps = JSON.parse(animeObj.episodes);
+                if (!Array.isArray(eps)) eps = [];
+            }
         } catch(e) { eps = []; }
 
         eps.push({ title: epTitle, link: epLink });
