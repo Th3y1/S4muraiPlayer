@@ -550,7 +550,6 @@
             return [];
         }
 
-        // Płynne przełączanie do widoku odtwarzacza
         function openPlayer(animeId) {
             const anime = allAnimeData.find(a => a.id == animeId);
             if (!anime) return;
@@ -595,7 +594,6 @@
             btnElement.classList.add('active');
         }
 
-        // Płynny powrót do katalogu
         function closePlayer() {
             const catalogView = document.getElementById('catalog-view');
             const playerView = document.getElementById('player-view');
@@ -644,10 +642,10 @@
             if (error) {
                 alert('Błąd: ' + error.message);
             } else {
-                alert('Serial dodany pomyślnie!');
                 document.getElementById('new-anime-title').value = '';
+                document.getElementById('new-anime-category').value = '';
                 document.getElementById('new-anime-image').value = '';
-                fetchAnime();
+                await fetchAnime();
             }
         }
 
@@ -661,7 +659,7 @@
                 return;
             }
 
-            await saveEpisodeToDatabase(animeId, epTitle, epLink, 'Odcinek dodany pomyślnie!');
+            await saveEpisodeDirectly(animeId, epTitle, epLink);
             document.getElementById('ep-number').value = '';
             document.getElementById('ep-link').value = '';
         }
@@ -676,31 +674,35 @@
                 return;
             }
 
-            await saveEpisodeToDatabase(animeId, epTitle, epLink, 'Twoja propozycja odcinka została dodana pomyślnie!');
+            await saveEpisodeDirectly(animeId, epTitle, epLink);
             document.getElementById('suggest-ep-title').value = '';
             document.getElementById('suggest-ep-link').value = '';
         }
 
-        async function saveEpisodeToDatabase(animeId, epTitle, epLink, successMessage) {
-            const animeObj = allAnimeData.find(a => a.id == animeId);
-            if (!animeObj) {
-                alert('Błąd: Nie znaleziono takiego serialu w pamięci!');
-                return;
-            }
+        // Pobiera bezpośrednio aktualne dane z bazy przed dodaniem, zapobiegając błędom pamięci
+        async function saveEpisodeDirectly(animeId, epTitle, epLink) {
+            try {
+                const { data: freshData, error: fetchError } = await supabaseClient
+                    .from('S4muraiPlayer')
+                    .select('episodes')
+                    .eq('id', animeId)
+                    .single();
 
-            let eps = parseEpisodes(animeObj.episodes);
-            eps.push({ title: epTitle, link: epLink });
+                if (fetchError) throw fetchError;
 
-            const { error } = await supabaseClient
-                .from('S4muraiPlayer')
-                .update({ episodes: eps })
-                .eq('id', animeId);
+                let eps = parseEpisodes(freshData.episodes);
+                eps.push({ title: epTitle, link: epLink });
 
-            if (error) {
-                alert('Błąd zapisu odcinka w bazie Supabase: ' + error.message);
-            } else {
-                alert(successMessage);
+                const { error: updateError } = await supabaseClient
+                    .from('S4muraiPlayer')
+                    .update({ episodes: eps })
+                    .eq('id', animeId);
+
+                if (updateError) throw updateError;
+
                 await fetchAnime();
+            } catch (err) {
+                alert('Błąd zapisu odcinka: ' + (err.message || JSON.stringify(err)));
             }
         }
 
@@ -709,6 +711,7 @@
             if (!animeId) {
                 document.getElementById('edit-anime-title').value = '';
                 document.getElementById('edit-anime-image').value = '';
+                document.getElementById('edit-anime-category').value = '';
                 return;
             }
             const animeObj = allAnimeData.find(a => a.id == animeId);
@@ -738,7 +741,6 @@
             if (error) {
                 alert('Błąd edycji: ' + error.message);
             } else {
-                alert('Serial zaktualizowany pomyślnie!');
                 fetchAnime();
             }
         }
