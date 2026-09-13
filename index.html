@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>S4muraiPlayer</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { background-color: #121212; color: #fff; font-family: sans-serif; padding: 20px; }
+        .container { max-width: 900px; margin: auto; background: #1e1e1e; padding: 20px; border-radius: 8px; }
+        input, select, button { padding: 10px; margin: 5px 0; width: 100%; box-sizing: border-box; background: #2d2d2d; border: 1px solid #444; color: #fff; border-radius: 4px; }
+        button { background: #e50914; font-weight: bold; cursor: pointer; }
+        button:hover { background: #b20710; }
+        .admin-panel { background: #252525; padding: 15px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #333; }
+        .anime-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; margin-top: 15px; }
+        .anime-card { background: #2a2a2a; border-radius: 6px; overflow: hidden; border: 1px solid #444; }
+        .anime-card img { width: 100%; height: 150px; object-fit: cover; background: #000; }
+        .anime-card-content { padding: 10px; }
+        .tag { display: inline-block; background: #e50914; font-size: 11px; padding: 2px 6px; border-radius: 3px; margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>S4muraiPlayer</h1>
+    
+    <!-- Panel administracyjny zablokowany hasłem -->
+    <div class="admin-panel">
+        <h3>Panel Administratora</h3>
+        <input type="password" id="adminPassword" placeholder="Hasło administratora">
+        <input type="text" id="animeTitle" placeholder="Tytuł anime (np. Solo Leveling)">
+        <select id="animeCategory">
+            <option value="Akcja">Akcja</option>
+            <option value="Isekai">Isekai</option>
+            <option value="Romans">Romans</option>
+            <option value="Fantasy">Fantasy</option>
+            <option value="Inne">Inne</option>
+        </select>
+        <input type="text" id="animeImage" placeholder="Link do miniatury (obrazka URL)">
+        <input type="text" id="animeEpisode" placeholder="Link do odtwarzacza / odcinka">
+        <button onclick="addAnime()">Dodaj Anime dla wszystkich</button>
+    </div>
+
+    <h2>Katalog Anime</h2>
+    <div id="animeList" class="anime-grid">Ładowanie z chmury...</div>
+</div>
+
+<script>
+    const SUPABASE_URL = 'https://dmxjcgriqxscxsxihed.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_XTe3B_5j4za4AWG67lCVAg_CMvVnMyL';
+    
+    const { createClient } = supabase;
+    const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // Pobieranie anime z bazy z uwzględnieniem nowych kolumn (kategoria, obrazek)
+    async function fetchAnime() {
+        const { data, error } = await _supabase.from('anime_list').select('*');
+        const listDiv = document.getElementById('animeList');
+        
+        if (error) {
+            listDiv.innerHTML = 'Błąd pobierania: ' + error.message;
+            return;
+        }
+
+        if (data.length === 0) {
+            listDiv.innerHTML = '<p>Brak dodanych anime w bazie.</p>';
+            return;
+        }
+
+        listDiv.innerHTML = '';
+        data.forEach(item => {
+            // Obsługa wsteczna dla starszych wpisów, które nie miały kategorii/obrazka
+            const category = item.category || 'Inne';
+            const img = item.image || 'https://via.placeholder.com/250x150?text=Brak+Okładki';
+            
+            listDiv.innerHTML += `
+                <div class="anime-card">
+                    <img src="${img}" alt="${item.title}">
+                    <div class="anime-card-content">
+                        <span class="tag">${category}</span>
+                        <strong>${item.title}</strong><br>
+                        <p style="font-size: 13px; color: #aaa; margin: 5px 0;">Odcinek: ${item.episodes || 'Brak'}</p>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    // Dodawanie z zabezpieczeniem hasłem
+    async function addAnime() {
+        const passwordInput = document.getElementById('adminPassword').value;
+        
+        if (passwordInput !== 'Korneliusz1111') {
+            alert('Błędne hasło administratora!');
+            return;
+        }
+
+        const title = document.getElementById('animeTitle').value;
+        const category = document.getElementById('animeCategory').value;
+        const image = document.getElementById('animeImage').value;
+        const episodes = document.getElementById('animeEpisode').value;
+
+        if (!title) {
+            alert('Wpisz tytuł anime!');
+            return;
+        }
+
+        // Zapisujemy do Supabase (zauważ, że baza dopisze to automatycznie do tabeli)
+        const { error } = await _supabase
+            .from('anime_list')
+            .insert([{ 
+                title: title, 
+                episodes: episodes,
+                category: category,
+                image: image
+            }]);
+
+        if (error) {
+            alert('Błąd zapisu: ' + error.message + '\n(Upewnij się, że w Supabase dodałeś kolumny category i image do tabeli anime_list)');
+        } else {
+            document.getElementById('adminPassword').value = '';
+            document.getElementById('animeTitle').value = '';
+            document.getElementById('animeImage').value = '';
+            document.getElementById('animeEpisode').value = '';
+            fetchAnime(); 
+        }
+    }
+
+    fetchAnime();
+</script>
+
+</body>
+</html>
