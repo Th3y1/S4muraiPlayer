@@ -338,11 +338,11 @@
             <!-- Baner główny -->
             <div class="hero-banner">
                 <h1>Witaj w S4muraiPlayer</h1>
-                <p>Twoje ulubione anime w jednym miejscu. Sprawdź najnowsze ogłoszenia poniżej!</p>
+                <p>Twoje ulubione anime w jednym miejscu.</p>
             </div>
 
             <!-- Sekcja ogłoszeń pod banerem -->
-            <div id="announcements-wrapper" class="announcements-container">
+            <div id="announcements-wrapper" class="announcements-container" style="display: none;">
                 <!-- Ładowane dynamicznie -->
             </div>
 
@@ -396,7 +396,7 @@
 
             <!-- Zarządzanie Ogłoszeniami -->
             <div class="admin-panel">
-                <h2>Dodaj Ogłoszenie (Tylko dla Ciebie)</h2>
+                <h2>Dodaj Ogłoszenie</h2>
                 <div class="form-group"><label>Tytuł ogłoszenia</label><input type="text" id="new-ann-title"></div>
                 <div class="form-group"><label>Treść ogłoszenia</label><textarea id="new-ann-text" rows="3"></textarea></div>
                 <div class="form-group"><label>Link do zdjęcia (Opcjonalnie)</label><input type="text" id="new-ann-image"></div>
@@ -450,7 +450,7 @@
     </div>
 
     <script>
-        // Konfiguracja Supabase (uzupełnij własnymi danymi)
+        // Konfiguracja Supabase
         const SUPABASE_URL = 'https://twoja-nazwa-projektu.supabase.co';
         const SUPABASE_KEY = 'twoj-klucz-anon';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -505,9 +505,10 @@
         function renderAnnouncements() {
             const container = document.getElementById('announcements-wrapper');
             if (!allAnnouncements.length) {
-                container.innerHTML = '';
+                container.style.display = 'none';
                 return;
             }
+            container.style.display = 'flex';
             let html = '';
             allAnnouncements.forEach(ann => {
                 html += `
@@ -890,7 +891,7 @@
         }
 
         async function deleteAnimeShow() {
-            const titleToDelete = document.getElementById('edit-anime-select'].value;
+            const titleToDelete = document.getElementById('edit-anime-select').value;
             if (!titleToDelete) {
                 alert('Najpierw wybierz serial do usunięcia z listy!');
                 return;
