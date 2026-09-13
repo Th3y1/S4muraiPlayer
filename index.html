@@ -33,7 +33,11 @@
             letter-spacing: 1px;
             text-shadow: 0 0 15px rgba(255, 51, 75, 0.4);
         }
-        .dev-btn {
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .dev-btn, .discord-btn {
             background: #191922;
             color: #fff;
             border: 1px solid #2f2f42;
@@ -41,12 +45,26 @@
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             transition: 0.2s;
+            font-size: 14px;
         }
         .dev-btn:hover {
             background: #ff334b;
             border-color: #ff334b;
             box-shadow: 0 0 10px rgba(255, 51, 75, 0.5);
+        }
+        .discord-btn {
+            background: #5865F2;
+            border-color: #5865F2;
+        }
+        .discord-btn:hover {
+            background: #4752C4;
+            border-color: #4752C4;
+            box-shadow: 0 0 10px rgba(88, 101, 242, 0.5);
         }
         /* Panel Dev */
         #dev-panel {
@@ -124,7 +142,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
             gap: 25px;
-            padding-top: 15px; /* Daje przestrzeń na unoszenie karty */
+            padding-top: 15px;
         }
         .anime-card {
             background: #13131a;
@@ -136,7 +154,6 @@
             border: 1px solid #1f1f2e;
             transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease, border-color 0.3s ease;
         }
-        /* EFEKT HOVER: Wyraźne podskoczenie w górę */
         .anime-card:hover {
             transform: translateY(-12px);
             box-shadow: 0 15px 35px rgba(255, 51, 75, 0.35);
@@ -220,7 +237,10 @@
 <div class="container">
     <header>
         <h1>S4muraiPlayer</h1>
-        <button class="dev-btn" onclick="toggleDevPanel()">Dev Panel</button>
+        <div class="header-buttons">
+            <a href="https://discord.gg/M6uy839mk" target="_blank" class="discord-btn">Discord</a>
+            <button class="dev-btn" onclick="toggleDevPanel()">Dev Panel</button>
+        </div>
     </header>
 
     <div id="error-msg"></div>
