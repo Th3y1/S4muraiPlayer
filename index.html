@@ -311,14 +311,14 @@
 
         let html = '';
         filtered.forEach(anime => {
-            // Bezpieczne parsowanie odcinków (zabezpieczenie przed brakiem tablicy)
+            // Super-bezpieczne parsowanie odcinków (zabezpieczenie przed null, obiektami lub stringami)
             let eps = [];
             try {
                 if (Array.isArray(anime.episodes)) {
                     eps = anime.episodes;
-                } else if (typeof anime.episodes === 'string') {
-                    eps = JSON.parse(anime.episodes);
-                    if (!Array.isArray(eps)) eps = [];
+                } else if (typeof anime.episodes === 'string' && anime.episodes.trim() !== '') {
+                    const parsed = JSON.parse(anime.episodes);
+                    if (Array.isArray(parsed)) eps = parsed;
                 }
             } catch(e) {
                 eps = [];
@@ -329,7 +329,9 @@
                 episodesHtml = '<span style="color: #666; font-size: 13px;">Brak odcinków</span>';
             } else {
                 eps.forEach(ep => {
-                    episodesHtml += `<a href="${ep.link}" target="_blank" class="ep-btn">${ep.title}</a>`;
+                    if (ep && ep.title && ep.link) {
+                        episodesHtml += `<a href="${ep.link}" target="_blank" class="ep-btn">${ep.title}</a>`;
+                    }
                 });
             }
 
@@ -403,9 +405,9 @@
         try {
             if (Array.isArray(animeObj.episodes)) {
                 eps = animeObj.episodes;
-            } else if (typeof animeObj.episodes === 'string') {
-                eps = JSON.parse(animeObj.episodes);
-                if (!Array.isArray(eps)) eps = [];
+            } else if (typeof animeObj.episodes === 'string' && animeObj.episodes.trim() !== '') {
+                const parsed = JSON.parse(animeObj.episodes);
+                if (Array.isArray(parsed)) eps = parsed;
             }
         } catch(e) { eps = []; }
 
