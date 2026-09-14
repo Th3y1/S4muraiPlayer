@@ -567,21 +567,12 @@
         /* PANEL ADMINA */
         #dev-panel {
             display: none;
-            opacity: 0;
-            transform: translateY(-10px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
             background-color: #121218;
             border: 1px solid #ff0033;
             padding: 25px;
             border-radius: 4px;
             margin-bottom: 30px;
             box-shadow: 0 0 20px rgba(255, 0, 51, 0.15);
-        }
-
-        #dev-panel.show {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
         }
 
         #dev-panel h2 {
@@ -610,6 +601,45 @@
             color: #888899;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+
+        .form-field {
+            flex: 1;
+            min-width: 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-field.full-width {
+            flex: 100%;
+        }
+
+        .form-field label {
+            font-size: 12px;
+            color: #aaa;
+            font-weight: bold;
+        }
+
+        .form-field input, .form-field select {
+            background-color: #0b0b0e;
+            border: 1px solid #22222e;
+            padding: 8px 12px;
+            border-radius: 4px;
+            color: white;
+            font-size: 13px;
+        }
+
+        .form-field input:focus, .form-field select:focus {
+            outline: none;
+            border-color: #ff0033;
         }
 
         .error-box {
@@ -861,12 +891,12 @@
 
         function toggleDevPanel() {
             const panel = document.getElementById('dev-panel');
-            if (panel.classList.contains('show')) {
-                panel.classList.remove('show');
+            if (panel.style.display === 'block') {
+                panel.style.display = 'none';
             } else {
                 const pass = prompt('Podaj hasło administratora:');
                 if (pass === 'Korneliusz1111') {
-                    panel.classList.add('show');
+                    panel.style.display = 'block';
                     populateSelects();
                     document.getElementById('admin-announcement-input').value = currentAnnouncementText;
                 } else if (pass !== null) {
@@ -888,7 +918,6 @@
                     document.getElementById('global-announcement-text').textContent = currentAnnouncementText;
                     document.getElementById('global-announcement-box').style.display = 'flex';
                 } else {
-                    // Jeśli brak konfiguracji w bazie, ustaw domyślne ogłoszenie
                     currentAnnouncementText = 'Witajcie na S4murai Player! Sprawdzajcie nowe odcinki w katalogu.';
                     document.getElementById('global-announcement-text').textContent = currentAnnouncementText;
                 }
@@ -905,7 +934,6 @@
             }
 
             try {
-                // Sprawdzamy czy istnieje rekord konfiguracyjny
                 const { data } = await supabaseClient
                     .from('S4muraiPlayer')
                     .select('title')
@@ -950,7 +978,6 @@
 
                 if (error) throw error;
 
-                // Odfiltrowujemy specjalny rekord konfiguracyjny z katalogu anime
                 allAnimeData = (data || []).filter(item => item.title !== '_GLOBAL_CONFIG_');
                 filterAnime();
                 populateSelects();
@@ -1030,12 +1057,6 @@
             return url;
         }
 
-        function extractEpisodeNumber(title) {
-            if (!title) return 0;
-            const match = title.match(/(\d+)/);
-            return match ? parseInt(match[1], 10) : 0;
-        }
-
         function openPlayerByTitle(title) {
             const anime = allAnimeData.find(a => a.title.toLowerCase() === title.toLowerCase());
             if (!anime) return;
@@ -1054,10 +1075,6 @@
                 document.getElementById('avg-rating-val').textContent = anime.rating_avg ? anime.rating_avg.toFixed(1) : '9.1';
 
                 const eps = parseEpisodes(anime.episodes);
-                
-                // Sortowanie odcinków od Odcinek 1 do Odcinek 12 (lub wg numerów)
-                eps.sort((a, b) => extractEpisodeNumber(a.title) - extractEpisodeNumber(b.title));
-
                 const episodesBar = document.getElementById('player-episodes-bar');
                 const iframe = document.getElementById('main-video-iframe');
 
