@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
     <link rel="icon" type="image/png" href="https://avatarfiles.alphacoders.com/890/thumb-1920-89063.gif">
-    <meta name="google-site-verification" content="google5515a6740e574bfe.html" />
+<meta name="google-site-verification" content="google5515a6740e574bfe.html" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>S4murai Player</title>
@@ -270,41 +270,14 @@
             font-weight: bold;
         }
 
-        .catalog-top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
         .catalog-header {
             font-size: 22px;
             font-weight: 900;
             letter-spacing: 1.5px;
             text-transform: uppercase;
+            margin-bottom: 25px;
             border-left: 4px solid #ff0033;
             padding-left: 12px;
-            margin-bottom: 0;
-        }
-
-        .sort-select {
-            background-color: #121218;
-            border: 1px solid #22222e;
-            color: #ffffff;
-            padding: 10px 15px;
-            border-radius: 4px;
-            font-size: 13px;
-            font-weight: bold;
-            cursor: pointer;
-            letter-spacing: 0.5px;
-            outline: none;
-            transition: 0.2s;
-        }
-
-        .sort-select:hover, .sort-select:focus {
-            border-color: #ff0033;
         }
 
         .categories {
@@ -440,8 +413,6 @@
             padding: 12px 20px;
             border: 1px solid #22222e;
             border-radius: 4px;
-            flex-wrap: wrap;
-            gap: 15px;
         }
 
         .rating-box {
@@ -491,15 +462,6 @@
             width: 100%;
             height: 100%;
             border: none;
-        }
-
-        .player-top-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-            gap: 10px;
         }
 
         .episodes-bar {
@@ -611,14 +573,6 @@
             border-radius: 4px;
             margin-bottom: 30px;
             box-shadow: 0 0 20px rgba(255, 0, 51, 0.15);
-            transition: all 0.25s ease-in-out;
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-
-        #dev-panel.active-admin {
-            opacity: 1;
-            transform: translateY(0);
         }
 
         #dev-panel h2 {
@@ -760,7 +714,7 @@
                 </div>
                 <div class="form-field">
                     <label>Nazwa / Numer odcinka</label>
-                    <input type="text" id="ep-number" placeholder="np. Odcinek 1 lub 01">
+                    <input type="text" id="ep-number" placeholder="np. Odcinek 1">
                 </div>
                 <div class="form-field full-width">
                     <label>Link do odtwarzacza lub YouTube</label>
@@ -840,16 +794,7 @@
             <div class="cat-chip" onclick="filterCategory('Inne', this)">Inne</div>
         </div>
 
-        <div class="catalog-top-bar">
-            <div class="catalog-header">Katalog wszystkich serii anime</div>
-            <select id="sort-select" class="sort-select" onchange="filterAnime()">
-                <option value="default">Sortuj: Domyślnie</option>
-                <option value="title-asc">Tytuł: A - Z</option>
-                <option value="title-desc">Tytuł: Z - A</option>
-                <option value="rating-desc">Ocena: Od najwyższej</option>
-                <option value="rating-asc">Ocena: Od najniższej</option>
-            </select>
-        </div>
+        <div class="catalog-header">Katalog wszystkich serii anime</div>
 
         <div class="anime-grid" id="anime-grid"></div>
     </div>
@@ -874,16 +819,6 @@
             <div class="video-frame-wrap">
                 <iframe id="main-video-iframe" src="" allowfullscreen></iframe>
             </div>
-
-            <!-- Sterowanie i sortowanie odcinków -->
-            <div class="player-top-controls">
-                <div style="font-weight: bold; font-size: 14px; text-transform: uppercase; color: #ff0033;">Lista odcinków:</div>
-                <select id="episodes-sort-select" class="sort-select" onchange="renderEpisodesList()">
-                    <option value="num-asc">Numerycznie: Od najnowszego / 1 do N (Rosnąco)</option>
-                    <option value="num-desc">Numerycznie: Od N do 1 (Malejąco)</option>
-                </select>
-            </div>
-
             <div class="episodes-bar" id="player-episodes-bar"></div>
             
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
@@ -917,18 +852,12 @@
 
         function toggleDevPanel() {
             const panel = document.getElementById('dev-panel');
-            if (panel.style.display === 'block' && panel.classList.contains('active-admin')) {
-                panel.classList.remove('active-admin');
-                setTimeout(() => {
-                    panel.style.display = 'none';
-                }, 250);
+            if (panel.style.display === 'block') {
+                panel.style.display = 'none';
             } else {
                 const pass = prompt('Podaj hasło administratora:');
                 if (pass === 'Korneliusz1111') {
                     panel.style.display = 'block';
-                    setTimeout(() => {
-                        panel.classList.add('active-admin');
-                    }, 10);
                     populateSelects();
                     document.getElementById('admin-announcement-input').value = currentAnnouncementText;
                 } else if (pass !== null) {
@@ -950,6 +879,7 @@
                     document.getElementById('global-announcement-text').textContent = currentAnnouncementText;
                     document.getElementById('global-announcement-box').style.display = 'flex';
                 } else {
+                    // Jeśli brak konfiguracji w bazie, ustaw domyślne ogłoszenie
                     currentAnnouncementText = 'Witajcie na S4murai Player! Sprawdzajcie nowe odcinki w katalogu.';
                     document.getElementById('global-announcement-text').textContent = currentAnnouncementText;
                 }
@@ -966,6 +896,7 @@
             }
 
             try {
+                // Sprawdzamy czy istnieje rekord konfiguracyjny
                 const { data } = await supabaseClient
                     .from('S4muraiPlayer')
                     .select('title')
@@ -1010,6 +941,7 @@
 
                 if (error) throw error;
 
+                // Odfiltrowujemy specjalny rekord konfiguracyjny z katalogu anime
                 allAnimeData = (data || []).filter(item => item.title !== '_GLOBAL_CONFIG_');
                 filterAnime();
                 populateSelects();
@@ -1033,25 +965,13 @@
         function filterAnime() {
             const searchInput = document.getElementById('search-input');
             const searchText = searchInput ? searchInput.value.toLowerCase() : '';
-            const sortSelect = document.getElementById('sort-select');
-            const sortValue = sortSelect ? sortSelect.value : 'default';
             const gridDiv = document.getElementById('anime-grid');
             
-            let filtered = allAnimeData.filter(anime => {
+            const filtered = allAnimeData.filter(anime => {
                 const matchesCategory = currentCategory === 'Wszystkie' || anime.category === currentCategory;
                 const matchesSearch = anime.title && anime.title.toLowerCase().includes(searchText);
                 return matchesCategory && matchesSearch;
             });
-
-            if (sortValue === 'title-asc') {
-                filtered.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
-            } else if (sortValue === 'title-desc') {
-                filtered.sort((a, b) => (b.title || '').localeCompare(a.title || ''));
-            } else if (sortValue === 'rating-desc') {
-                filtered.sort((a, b) => (b.rating_avg || 9.1) - (a.rating_avg || 9.1));
-            } else if (sortValue === 'rating-asc') {
-                filtered.sort((a, b) => (a.rating_avg || 9.1) - (b.rating_avg || 9.1));
-            }
 
             if (filtered.length === 0) {
                 gridDiv.innerHTML = '<p style="color: #888;">Brak seriali spełniających kryteria.</p>';
@@ -1118,58 +1038,27 @@
                 document.getElementById('player-series-title').textContent = anime.title;
                 document.getElementById('avg-rating-val').textContent = anime.rating_avg ? anime.rating_avg.toFixed(1) : '9.1';
 
-                // Reset sortowania odcinków do domyślnego (rosnąco)
-                document.getElementById('episodes-sort-select').value = 'num-asc';
-                renderEpisodesList();
+                const eps = parseEpisodes(anime.episodes);
+                const episodesBar = document.getElementById('player-episodes-bar');
+                const iframe = document.getElementById('main-video-iframe');
+
+                if (eps.length === 0) {
+                    episodesBar.innerHTML = '<span style="color: #888;">Brak dostępnych odcinków dla tego serialu.</span>';
+                    iframe.src = '';
+                } else {
+                    let buttonsHtml = '';
+                    eps.forEach((ep, index) => {
+                        const activeClass = index === 0 ? 'active' : '';
+                        buttonsHtml += `<button class="ep-select-btn ${activeClass}" onclick="playEpisode('${ep.link}', this)">${ep.title}</button>`;
+                    });
+                    episodesBar.innerHTML = buttonsHtml;
+                    iframe.src = formatVideoLink(eps[0].link);
+                }
+
                 loadComments();
             }, 150);
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // Pomocnicza funkcja do wyciągania liczby z nazwy/tytułu odcinka (np. "Odcinek 5" -> 5)
-        function extractEpisodeNumber(epTitle) {
-            const matches = epTitle.match(/(\d+)/);
-            return matches ? parseInt(matches[1], 10) : 0;
-        }
-
-        function renderEpisodesList() {
-            if (!currentActiveAnime) return;
-            const eps = parseEpisodes(currentActiveAnime.episodes);
-            const sortVal = document.getElementById('episodes-sort-select').value;
-            const episodesBar = document.getElementById('player-episodes-bar');
-            const iframe = document.getElementById('main-video-iframe');
-
-            // Klonujemy tablicę, aby nie popsuć oryginalnej kolejności
-            let sortedEps = [...eps];
-
-            sortedEps.sort((a, b) => {
-                const numA = extractEpisodeNumber(a.title);
-                const numB = extractEpisodeNumber(b.title);
-
-                if (sortVal === 'num-asc') {
-                    return numA - numB;
-                } else {
-                    return numB - numA;
-                }
-            });
-
-            if (sortedEps.length === 0) {
-                episodesBar.innerHTML = '<span style="color: #888;">Brak dostępnych odcinków dla tego serialu.</span>';
-                iframe.src = '';
-                return;
-            }
-
-            let buttonsHtml = '';
-            sortedEps.forEach((ep, index) => {
-                // Domyślnie zaznaczamy pierwszy element z posortowanej listy
-                const activeClass = index === 0 ? 'active' : '';
-                buttonsHtml += `<button class="ep-select-btn ${activeClass}" onclick="playEpisode('${ep.link}', this)">${ep.title}</button>`;
-            });
-
-            episodesBar.innerHTML = buttonsHtml;
-            // Włączamy odtwarzanie pierwszego odcinka z nowej listy
-            iframe.src = formatVideoLink(sortedEps[0].link);
         }
 
         function playEpisode(link, btnElement) {
@@ -1438,7 +1327,7 @@
         }
 
         async function deleteAnimeShow() {
-            const titleToDelete = document.getElementById('edit-anime-select'].value;
+            const titleToDelete = document.getElementById('edit-anime-select').value;
             if (!titleToDelete) {
                 alert('Najpierw wybierz serial do usunięcia z listy!');
                 return;
