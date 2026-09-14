@@ -567,12 +567,21 @@
         /* PANEL ADMINA */
         #dev-panel {
             display: none;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
             background-color: #121218;
             border: 1px solid #ff0033;
             padding: 25px;
             border-radius: 4px;
             margin-bottom: 30px;
             box-shadow: 0 0 20px rgba(255, 0, 51, 0.15);
+        }
+
+        #dev-panel.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
         }
 
         #dev-panel h2 {
@@ -852,12 +861,12 @@
 
         function toggleDevPanel() {
             const panel = document.getElementById('dev-panel');
-            if (panel.style.display === 'block') {
-                panel.style.display = 'none';
+            if (panel.classList.contains('show')) {
+                panel.classList.remove('show');
             } else {
                 const pass = prompt('Podaj hasło administratora:');
                 if (pass === 'Korneliusz1111') {
-                    panel.style.display = 'block';
+                    panel.classList.add('show');
                     populateSelects();
                     document.getElementById('admin-announcement-input').value = currentAnnouncementText;
                 } else if (pass !== null) {
@@ -1021,6 +1030,12 @@
             return url;
         }
 
+        function extractEpisodeNumber(title) {
+            if (!title) return 0;
+            const match = title.match(/(\d+)/);
+            return match ? parseInt(match[1], 10) : 0;
+        }
+
         function openPlayerByTitle(title) {
             const anime = allAnimeData.find(a => a.title.toLowerCase() === title.toLowerCase());
             if (!anime) return;
@@ -1039,6 +1054,10 @@
                 document.getElementById('avg-rating-val').textContent = anime.rating_avg ? anime.rating_avg.toFixed(1) : '9.1';
 
                 const eps = parseEpisodes(anime.episodes);
+                
+                // Sortowanie odcinków od Odcinek 1 do Odcinek 12 (lub wg numerów)
+                eps.sort((a, b) => extractEpisodeNumber(a.title) - extractEpisodeNumber(b.title));
+
                 const episodesBar = document.getElementById('player-episodes-bar');
                 const iframe = document.getElementById('main-video-iframe');
 
