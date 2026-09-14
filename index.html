@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
     <link rel="icon" type="image/png" href="https://avatarfiles.alphacoders.com/890/thumb-1920-89063.gif">
-<meta name="google-site-verification" content="google5515a6740e574bfe.html" />
+    <meta name="google-site-verification" content="google5515a6740e574bfe.html" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>S4murai Player</title>
@@ -270,14 +270,41 @@
             font-weight: bold;
         }
 
+        .catalog-top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
         .catalog-header {
             font-size: 22px;
             font-weight: 900;
             letter-spacing: 1.5px;
             text-transform: uppercase;
-            margin-bottom: 25px;
             border-left: 4px solid #ff0033;
             padding-left: 12px;
+            margin-bottom: 0;
+        }
+
+        .sort-select {
+            background-color: #121218;
+            border: 1px solid #22222e;
+            color: #ffffff;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .sort-select:hover, .sort-select:focus {
+            border-color: #ff0033;
         }
 
         .categories {
@@ -413,6 +440,8 @@
             padding: 12px 20px;
             border: 1px solid #22222e;
             border-radius: 4px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .rating-box {
@@ -462,6 +491,15 @@
             width: 100%;
             height: 100%;
             border: none;
+        }
+
+        .player-top-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .episodes-bar {
@@ -564,97 +602,51 @@
             color: #ccc;
         }
 
-        /* NOWY, NOWOCZESNY PANEL ADMINA */
+        /* PANEL ADMINA */
         #dev-panel {
             display: none;
-            background: linear-gradient(145deg, #121218 0%, #0d0d12 100%);
+            background-color: #121218;
             border: 1px solid #ff0033;
-            padding: 30px;
-            border-radius: 8px;
-            margin-bottom: 40px;
-            box-shadow: 0 10px 30px rgba(255, 0, 51, 0.2);
+            padding: 25px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 20px rgba(255, 0, 51, 0.15);
+            transition: all 0.25s ease-in-out;
+            opacity: 0;
+            transform: translateY(-10px);
         }
 
-        .admin-header-title {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 2px solid #22222e;
-            padding-bottom: 15px;
-            margin-bottom: 25px;
+        #dev-panel.active-admin {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         #dev-panel h2 {
             color: #ff0033;
-            font-size: 20px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-        }
-
-        .admin-grid-layout {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 20px;
-        }
-
-        .admin-card-box {
-            background-color: #16161f;
-            border: 1px solid #22222e;
-            border-radius: 6px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            transition: border-color 0.2s;
-        }
-
-        .admin-card-box:hover {
-            border-color: #3d3d52;
-        }
-
-        .admin-card-box h3 {
-            font-size: 14px;
-            color: #ff0033;
+            font-size: 18px;
+            margin-bottom: 20px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
-        .form-row {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+        .admin-section {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #22222e;
         }
 
-        .form-field {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
+        .admin-section:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
         }
 
-        .form-field label {
-            font-size: 11px;
+        .admin-section h3 {
+            font-size: 13px;
+            margin-bottom: 12px;
             color: #888899;
             text-transform: uppercase;
-            font-weight: bold;
             letter-spacing: 0.5px;
-        }
-
-        .form-field input, .form-field select {
-            background-color: #0b0b0e;
-            border: 1px solid #252533;
-            padding: 10px 12px;
-            border-radius: 4px;
-            color: white;
-            font-size: 13px;
-            transition: border-color 0.2s;
-        }
-
-        .form-field input:focus, .form-field select:focus {
-            outline: none;
-            border-color: #ff0033;
         }
 
         .error-box {
@@ -669,21 +661,12 @@
         }
 
         .admin-ep-list {
-            margin-top: 5px;
+            margin-top: 10px;
             display: flex;
             flex-direction: column;
             gap: 6px;
-            max-height: 180px;
+            max-height: 150px;
             overflow-y: auto;
-            padding-right: 5px;
-        }
-
-        .admin-ep-list::-webkit-scrollbar {
-            width: 5px;
-        }
-        .admin-ep-list::-webkit-scrollbar-thumb {
-            background: #252533;
-            border-radius: 3px;
         }
 
         .admin-ep-item {
@@ -691,7 +674,7 @@
             justify-content: space-between;
             align-items: center;
             background-color: #0b0b0e;
-            padding: 8px 12px;
+            padding: 6px 10px;
             border-radius: 4px;
             border: 1px solid #22222e;
             font-size: 12px;
@@ -701,12 +684,11 @@
             background-color: #ff0033;
             color: white;
             border: none;
-            padding: 4px 10px;
+            padding: 3px 8px;
             border-radius: 3px;
             cursor: pointer;
             font-size: 11px;
             font-weight: bold;
-            transition: background 0.2s;
         }
         .small-del-btn:hover {
             background-color: #cc0029;
@@ -733,105 +715,93 @@
 
     <div id="error-box" class="error-box"></div>
 
-    <!-- NOWOCZESNY PANEL ADMINA -->
+    <!-- PANEL ADMINA -->
     <div id="dev-panel">
-        <div class="admin-header-title">
-            <h2>Panel Zarządzania Systemem</h2>
-            <button class="dev-btn danger-btn" onclick="toggleDevPanel()" style="padding: 6px 12px; font-size: 12px;">Zamknij Panel</button>
+        <h2>Panel Zarządzania</h2>
+
+        <div class="admin-section">
+            <h3>Edytuj Ogłoszenie Główne</h3>
+            <div class="form-row">
+                <div class="form-field full-width">
+                    <label>Treść ogłoszenia</label>
+                    <input type="text" id="admin-announcement-input" placeholder="Wpisz treść ogłoszenia widocznego na stronie...">
+                </div>
+            </div>
+            <button class="dev-btn" onclick="updateAnnouncement()" style="padding: 8px 16px; font-size: 13px;">Zapisz Ogłoszenie</button>
         </div>
 
-        <div class="admin-grid-layout">
-            <!-- Kafel 1: Ogłoszenie -->
-            <div class="admin-card-box">
-                <h3>📢 Globalne Ogłoszenie</h3>
-                <div class="form-row">
-                    <div class="form-field">
-                        <label>Treść komunikatu</label>
-                        <input type="text" id="admin-announcement-input" placeholder="Wpisz treść ogłoszenia...">
-                    </div>
+        <div class="admin-section">
+            <h3>Dodaj nowy serial</h3>
+            <div class="form-row">
+                <div class="form-field">
+                    <label>Tytuł serialu</label>
+                    <input type="text" id="new-anime-title" placeholder="np. Tytuł serii...">
                 </div>
-                <button class="dev-btn" onclick="updateAnnouncement()" style="padding: 9px; font-size: 12px; margin-top: auto;">Zapisz Ogłoszenie</button>
+                <div class="form-field">
+                    <label>Kategoria</label>
+                    <input type="text" id="new-anime-category" placeholder="np. Akcja, Romans">
+                </div>
+                <div class="form-field full-width">
+                    <label>Link do okładki (URL)</label>
+                    <input type="text" id="new-anime-image" placeholder="https://...">
+                </div>
             </div>
+            <button class="dev-btn" onclick="addAnimeShow()" style="padding: 8px 16px; font-size: 13px;">Dodaj Serial</button>
+        </div>
 
-            <!-- Kafel 2: Dodaj serial -->
-            <div class="admin-card-box">
-                <h3>➕ Nowy Serial</h3>
-                <div class="form-row">
-                    <div class="form-field">
-                        <label>Tytuł serialu</label>
-                        <input type="text" id="new-anime-title" placeholder="np. Tytuł serii...">
-                    </div>
-                    <div class="form-field">
-                        <label>Kategoria</label>
-                        <input type="text" id="new-anime-category" placeholder="np. Akcja, Romans">
-                    </div>
-                    <div class="form-field">
-                        <label>Link do okładki (URL)</label>
-                        <input type="text" id="new-anime-image" placeholder="https://...">
-                    </div>
+        <div class="admin-section">
+            <h3>Dodaj odcinek do serialu</h3>
+            <div class="form-row">
+                <div class="form-field">
+                    <label>Wybierz serial</label>
+                    <select id="ep-anime-select">
+                        <option value="">Wybierz serial...</option>
+                    </select>
                 </div>
-                <button class="dev-btn" onclick="addAnimeShow()" style="padding: 9px; font-size: 12px; margin-top: auto;">Dodaj Serial</button>
+                <div class="form-field">
+                    <label>Nazwa / Numer odcinka</label>
+                    <input type="text" id="ep-number" placeholder="np. Odcinek 1 lub 01">
+                </div>
+                <div class="form-field full-width">
+                    <label>Link do odtwarzacza lub YouTube</label>
+                    <input type="text" id="ep-link" placeholder="https://...">
+                </div>
             </div>
+            <button class="dev-btn" onclick="addEpisode()" style="padding: 8px 16px; font-size: 13px;">Dodaj Odcinek</button>
+        </div>
 
-            <!-- Kafel 3: Dodaj odcinek -->
-            <div class="admin-card-box">
-                <h3>🎬 Dodaj Odcinek</h3>
-                <div class="form-row">
-                    <div class="form-field">
-                        <label>Wybierz serial</label>
-                        <select id="ep-anime-select">
-                            <option value="">Wybierz serial...</option>
-                        </select>
-                    </div>
-                    <div class="form-field">
-                        <label>Numer / Nazwa odcinka</label>
-                        <input type="text" id="ep-number" placeholder="np. Odcinek 1">
-                    </div>
-                    <div class="form-field">
-                        <label>Link do odtwarzacza / YouTube</label>
-                        <input type="text" id="ep-link" placeholder="https://...">
+        <div class="admin-section">
+            <h3>Edytuj / Usuń istniejący serial i jego odcinki</h3>
+            <div class="form-row">
+                <div class="form-field full-width">
+                    <label>Wybierz serial do edycji</label>
+                    <select id="edit-anime-select" onchange="loadEditData()">
+                        <option value="">Wybierz serial...</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label>Nowy tytuł</label>
+                    <input type="text" id="edit-anime-title" placeholder="Tytuł">
+                </div>
+                <div class="form-field">
+                    <label>Nowa kategoria</label>
+                    <input type="text" id="edit-anime-category" placeholder="Kategoria">
+                </div>
+                <div class="form-field full-width">
+                    <label>Nowy link do okładki</label>
+                    <input type="text" id="edit-anime-image" placeholder="URL okładki">
+                </div>
+                
+                <div class="form-field full-width">
+                    <label>Zarządzaj odcinkami tego serialu:</label>
+                    <div id="admin-episodes-container" class="admin-ep-list">
+                        <span style="color: #666; font-size: 12px;">Wybierz serial powyżej, aby zobaczyć odcinki.</span>
                     </div>
                 </div>
-                <button class="dev-btn" onclick="addEpisode()" style="padding: 9px; font-size: 12px; margin-top: auto;">Dodaj Odcinek</button>
             </div>
-
-            <!-- Kafel 4: Edycja / Usuwanie seriali i odcinków (Szerszy kafelek) -->
-            <div class="admin-card-box" style="grid-column: 1 / -1;">
-                <h3>⚙️ Edycja i Usuwanie Serii / Odcinków</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px;">
-                    <div class="form-row">
-                        <div class="form-field">
-                            <label>Wybierz serial do edycji</label>
-                            <select id="edit-anime-select" onchange="loadEditData()">
-                                <option value="">Wybierz serial...</option>
-                            </select>
-                        </div>
-                        <div class="form-field">
-                            <label>Nowy tytuł</label>
-                            <input type="text" id="edit-anime-title" placeholder="Tytuł">
-                        </div>
-                        <div class="form-field">
-                            <label>Nowa kategoria</label>
-                            <input type="text" id="edit-anime-category" placeholder="Kategoria">
-                        </div>
-                        <div class="form-field">
-                            <label>Nowy link do okładki</label>
-                            <input type="text" id="edit-anime-image" placeholder="URL okładki">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-field" style="height: 100%;">
-                            <label>Zarządzaj odcinkami (Automatycznie sortowane):</label>
-                            <div id="admin-episodes-container" class="admin-ep-list">
-                                <span style="color: #666; font-size: 12px;">Wybierz serial powyżej, aby zobaczyć odcinki.</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div style="display: flex; gap: 10px; margin-top: 10px; border-top: 1px solid #22222e; padding-top: 15px;">
-                    <button class="dev-btn" onclick="updateAnimeShow()" style="padding: 8px 16px; font-size: 12px;">Zapisz zmiany w serialu</button>
-                    <button class="dev-btn danger-btn" onclick="deleteAnimeShow()" style="padding: 8px 16px; font-size: 12px;">Usuń Cały Serial</button>
-                </div>
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <button class="dev-btn" onclick="updateAnimeShow()" style="padding: 8px 16px; font-size: 13px;">Zapisz zmiany</button>
+                <button class="dev-btn danger-btn" onclick="deleteAnimeShow()" style="padding: 8px 16px; font-size: 13px;">Usuń Cały Serial</button>
             </div>
         </div>
     </div>
@@ -870,7 +840,16 @@
             <div class="cat-chip" onclick="filterCategory('Inne', this)">Inne</div>
         </div>
 
-        <div class="catalog-header">Katalog wszystkich serii anime</div>
+        <div class="catalog-top-bar">
+            <div class="catalog-header">Katalog wszystkich serii anime</div>
+            <select id="sort-select" class="sort-select" onchange="filterAnime()">
+                <option value="default">Sortuj: Domyślnie</option>
+                <option value="title-asc">Tytuł: A - Z</option>
+                <option value="title-desc">Tytuł: Z - A</option>
+                <option value="rating-desc">Ocena: Od najwyższej</option>
+                <option value="rating-asc">Ocena: Od najniższej</option>
+            </select>
+        </div>
 
         <div class="anime-grid" id="anime-grid"></div>
     </div>
@@ -895,6 +874,16 @@
             <div class="video-frame-wrap">
                 <iframe id="main-video-iframe" src="" allowfullscreen></iframe>
             </div>
+
+            <!-- Sterowanie i sortowanie odcinków -->
+            <div class="player-top-controls">
+                <div style="font-weight: bold; font-size: 14px; text-transform: uppercase; color: #ff0033;">Lista odcinków:</div>
+                <select id="episodes-sort-select" class="sort-select" onchange="renderEpisodesList()">
+                    <option value="num-asc">Numerycznie: Od najnowszego / 1 do N (Rosnąco)</option>
+                    <option value="num-desc">Numerycznie: Od N do 1 (Malejąco)</option>
+                </select>
+            </div>
+
             <div class="episodes-bar" id="player-episodes-bar"></div>
             
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
@@ -928,12 +917,18 @@
 
         function toggleDevPanel() {
             const panel = document.getElementById('dev-panel');
-            if (panel.style.display === 'block') {
-                panel.style.display = 'none';
+            if (panel.style.display === 'block' && panel.classList.contains('active-admin')) {
+                panel.classList.remove('active-admin');
+                setTimeout(() => {
+                    panel.style.display = 'none';
+                }, 250);
             } else {
                 const pass = prompt('Podaj hasło administratora:');
                 if (pass === 'Korneliusz1111') {
                     panel.style.display = 'block';
+                    setTimeout(() => {
+                        panel.classList.add('active-admin');
+                    }, 10);
                     populateSelects();
                     document.getElementById('admin-announcement-input').value = currentAnnouncementText;
                 } else if (pass !== null) {
@@ -1038,13 +1033,25 @@
         function filterAnime() {
             const searchInput = document.getElementById('search-input');
             const searchText = searchInput ? searchInput.value.toLowerCase() : '';
+            const sortSelect = document.getElementById('sort-select');
+            const sortValue = sortSelect ? sortSelect.value : 'default';
             const gridDiv = document.getElementById('anime-grid');
             
-            const filtered = allAnimeData.filter(anime => {
+            let filtered = allAnimeData.filter(anime => {
                 const matchesCategory = currentCategory === 'Wszystkie' || anime.category === currentCategory;
                 const matchesSearch = anime.title && anime.title.toLowerCase().includes(searchText);
                 return matchesCategory && matchesSearch;
             });
+
+            if (sortValue === 'title-asc') {
+                filtered.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+            } else if (sortValue === 'title-desc') {
+                filtered.sort((a, b) => (b.title || '').localeCompare(a.title || ''));
+            } else if (sortValue === 'rating-desc') {
+                filtered.sort((a, b) => (b.rating_avg || 9.1) - (a.rating_avg || 9.1));
+            } else if (sortValue === 'rating-asc') {
+                filtered.sort((a, b) => (a.rating_avg || 9.1) - (b.rating_avg || 9.1));
+            }
 
             if (filtered.length === 0) {
                 gridDiv.innerHTML = '<p style="color: #888;">Brak seriali spełniających kryteria.</p>';
@@ -1072,22 +1079,12 @@
 
         function parseEpisodes(episodesField) {
             try {
-                let eps = [];
                 if (Array.isArray(episodesField)) {
-                    eps = episodesField;
+                    return episodesField;
                 } else if (typeof episodesField === 'string' && episodesField.trim() !== '') {
                     const parsed = JSON.parse(episodesField);
-                    if (Array.isArray(parsed)) eps = parsed;
+                    if (Array.isArray(parsed)) return parsed;
                 }
-                
-                // AUTOMATYCZNE SORTOWANIE ODCINKÓW PO NUMERZE W NAZWIE (np. "Odcinek 1", "Odcinek 2" itd.)
-                eps.sort((a, b) => {
-                    const numA = parseInt(a.title.replace(/\D/g, '')) || 0;
-                    const numB = parseInt(b.title.replace(/\D/g, '')) || 0;
-                    return numA - numB;
-                });
-
-                return eps;
             } catch(e) {}
             return [];
         }
@@ -1121,27 +1118,58 @@
                 document.getElementById('player-series-title').textContent = anime.title;
                 document.getElementById('avg-rating-val').textContent = anime.rating_avg ? anime.rating_avg.toFixed(1) : '9.1';
 
-                const eps = parseEpisodes(anime.episodes);
-                const episodesBar = document.getElementById('player-episodes-bar');
-                const iframe = document.getElementById('main-video-iframe');
-
-                if (eps.length === 0) {
-                    episodesBar.innerHTML = '<span style="color: #888;">Brak dostępnych odcinków dla tego serialu.</span>';
-                    iframe.src = '';
-                } else {
-                    let buttonsHtml = '';
-                    eps.forEach((ep, index) => {
-                        const activeClass = index === 0 ? 'active' : '';
-                        buttonsHtml += `<button class="ep-select-btn ${activeClass}" onclick="playEpisode('${ep.link}', this)">${ep.title}</button>`;
-                    });
-                    episodesBar.innerHTML = buttonsHtml;
-                    iframe.src = formatVideoLink(eps[0].link);
-                }
-
+                // Reset sortowania odcinków do domyślnego (rosnąco)
+                document.getElementById('episodes-sort-select').value = 'num-asc';
+                renderEpisodesList();
                 loadComments();
             }, 150);
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Pomocnicza funkcja do wyciągania liczby z nazwy/tytułu odcinka (np. "Odcinek 5" -> 5)
+        function extractEpisodeNumber(epTitle) {
+            const matches = epTitle.match(/(\d+)/);
+            return matches ? parseInt(matches[1], 10) : 0;
+        }
+
+        function renderEpisodesList() {
+            if (!currentActiveAnime) return;
+            const eps = parseEpisodes(currentActiveAnime.episodes);
+            const sortVal = document.getElementById('episodes-sort-select').value;
+            const episodesBar = document.getElementById('player-episodes-bar');
+            const iframe = document.getElementById('main-video-iframe');
+
+            // Klonujemy tablicę, aby nie popsuć oryginalnej kolejności
+            let sortedEps = [...eps];
+
+            sortedEps.sort((a, b) => {
+                const numA = extractEpisodeNumber(a.title);
+                const numB = extractEpisodeNumber(b.title);
+
+                if (sortVal === 'num-asc') {
+                    return numA - numB;
+                } else {
+                    return numB - numA;
+                }
+            });
+
+            if (sortedEps.length === 0) {
+                episodesBar.innerHTML = '<span style="color: #888;">Brak dostępnych odcinków dla tego serialu.</span>';
+                iframe.src = '';
+                return;
+            }
+
+            let buttonsHtml = '';
+            sortedEps.forEach((ep, index) => {
+                // Domyślnie zaznaczamy pierwszy element z posortowanej listy
+                const activeClass = index === 0 ? 'active' : '';
+                buttonsHtml += `<button class="ep-select-btn ${activeClass}" onclick="playEpisode('${ep.link}', this)">${ep.title}</button>`;
+            });
+
+            episodesBar.innerHTML = buttonsHtml;
+            // Włączamy odtwarzanie pierwszego odcinka z nowej listy
+            iframe.src = formatVideoLink(sortedEps[0].link);
         }
 
         function playEpisode(link, btnElement) {
@@ -1410,7 +1438,7 @@
         }
 
         async function deleteAnimeShow() {
-            const titleToDelete = document.getElementById('edit-anime-select').value;
+            const titleToDelete = document.getElementById('edit-anime-select'].value;
             if (!titleToDelete) {
                 alert('Najpierw wybierz serial do usunięcia z listy!');
                 return;
@@ -1427,7 +1455,7 @@
                 alert('Błąd usuwania serialu: ' + error.message);
             } else {
                 alert('Serial został usunięty.');
-                document.getElementById('edit-anime-select').value = جائے۔
+                document.getElementById('edit-anime-select').value = '';
                 loadEditData();
                 await fetchAnime();
             }
